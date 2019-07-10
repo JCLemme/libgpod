@@ -33,14 +33,14 @@ if HAVE_PYTHON
 BUILT_SOURCES = gpod_wrap.c
 SWIG_INTERFACES = gpod.i gpod_doc.i
 LIBGPOD_CFLAGS += -fno-strict-aliasing
-INCLUDES = -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(top_srcdir)/src
 
 gpoddir = $(pyexecdir)/gpod
 gpod_PYTHON =  __init__.py gtkpod.py ipod.py
 nodist_gpod_PYTHON = gpod.py
 gpod_LTLIBRARIES = _gpod.la
 nodist__gpod_la_SOURCES = gpod_wrap.c
-_gpod_la_CPPFLAGS = $(PYTHON_INCLUDES) $(LIBGPOD_CFLAGS) $(PYGOBJECT_CFLAGS) $(INCLUDES)
+_gpod_la_CPPFLAGS = $(PYTHON_INCLUDES) $(LIBGPOD_CFLAGS) $(PYGOBJECT_CFLAGS) $(AM_CPPFLAGS)
 _gpod_la_LDFLAGS = -module -avoid-version -shared
 _gpod_la_LIBADD = $(LIBGPOD_LIBS) $(PYGOBJECT_LIBS) $(top_builddir)/src/libgpod.la
 
@@ -53,7 +53,7 @@ gpod_doc.i: $(srcdir)/gpod_doc.i.in $(srcdir)/gtkdoc-to-swig.xsl
 	fi
 
 gpod_wrap.c: $(SWIG_INTERFACES) $(nodist_gpod_PYTHON)
-	$(SWIG) -python $(INCLUDES) -o $@ $<
+	$(SWIG) -python $(AM_CPPFLAGS) -o $@ $<
 
 gpod.py: $(SWIG_INTERFACES)
 	$(SWIG) -python -o $@ $<

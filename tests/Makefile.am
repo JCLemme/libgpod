@@ -53,5 +53,5 @@ noinst_PROGRAMS=test-itdb test-ls test-firewire-id \
 		test-sysinfo-extended-parsing			 \
 	        $(TESTTHUMBS) $(TESTTAGLIB) $(TESTCP) $(TESTMISC)
 
-INCLUDES=$(LIBGPOD_CFLAGS) -I$(top_srcdir)/src -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
+AM_CPPFLAGS=$(LIBGPOD_CFLAGS) -I$(top_srcdir)/src -DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\"
 LIBS=$(LIBGPOD_LIBS) $(top_builddir)/src/libgpod.la
