@@ -271,7 +271,14 @@ AC_ARG_ENABLE(pygobject, [AS_HELP_STRING([--disable-pygobject],[Python API will 
 esac])
 AH_TEMPLATE([HAVE_PYGOBJECT], [Whether pygobject is installed, Python API will lack GdkPixbuf support without PyGOBJECT])
 if test x$enable_pygobject != xno; then
-   PKG_CHECK_MODULES(PYGOBJECT, pygobject-2.0 >= 2.8.0, have_pygobject=yes, have_pygobject=no)
+    dnl decide which version of pygobject should be used
+    if $PYTHON -c "import sys; sys.exit(int(sys.version_info.major < 3))"; then
+        PYGOBJECT=pygobject-2.0
+    else
+        PYGOBJECT=pygobject-3.0
+    fi
+
+   PKG_CHECK_MODULES(PYGOBJECT, $PYGOBJECT >= 2.8.0, have_pygobject=yes, have_pygobject=no)
    if test x"$enable_pygobject" = xyes -a x"$have_pygobject" = xno; then
       AC_MSG_ERROR([pygobject support explicitly requested but pygobject couldn't be found])
    fi
