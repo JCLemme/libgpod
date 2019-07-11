@@ -3,7 +3,7 @@
 /*
  Copyright (C) 2007 Nick Piper <nick-gtkpod at nickpiper co uk>
  Part of the gtkpod project.
- 
+
  URL: http://www.gtkpod.org/
  URL: http://gtkpod.sourceforge.net/
 
@@ -46,13 +46,13 @@ version_info = version.split(".")
 %module(docstring=DOCSTRING) gpod
 %{
 #include "@top_builddir@/config.h"
-#include "db-artwork-debug.h" 
-#include "db-artwork-parser.h" 
-#include "db-image-parser.h" 
-#include "db-itunes-parser.h" 
-#include "db-parse-context.h" 
-#include "itdb.h" 
-#include "itdb_device.h" 
+#include "db-artwork-debug.h"
+#include "db-artwork-parser.h"
+#include "db-image-parser.h"
+#include "db-itunes-parser.h"
+#include "db-parse-context.h"
+#include "itdb.h"
+#include "itdb_device.h"
 #include "itdb_private.h"
 #include <time.h>
 #include <datetime.h>
@@ -84,7 +84,15 @@ PyObject* sw_get_photoalbum_members(Itdb_PhotoAlbum *album);
 PyObject* sw_ipod_device_to_dict(Itdb_Device *device);
 void sw__track_extra_destroy (PyObject *data);
 void hash_table_to_pydict(gpointer key, gpointer value, gpointer user_data);
-void SWIG_init(void);
+
+#if PY_VERSION_HEX >= 0x03000000
+  PyObject* SWIG_init(void);
+  #define PyInt_CheckExact PyLong_CheckExact
+  #define PyInt_AsUnsignedLongMask PyLong_AsUnsignedLongMask
+  #define PyInt_AsUnsignedLongLongMask PyLong_AsUnsignedLongLongMask
+#else
+  void SWIG_init(void);
+#endif
 
 PyObject* sw_get_tracks(Itdb_iTunesDB *itdb) {
   PyObject    *list;
@@ -152,9 +160,9 @@ PyObject* sw_get_playlists(Itdb_iTunesDB *itdb) {
   }
   return list;
  }
- 
+
  void sw__track_extra_destroy (PyObject *data) {
-   Py_XDECREF(data);   
+   Py_XDECREF(data);
  }
 
  PyObject *sw__track_extra_duplicate (PyObject *data) {
@@ -182,7 +190,7 @@ PyObject* sw_get_playlists(Itdb_iTunesDB *itdb) {
      return NULL;
    }
  }
- 
+
  PyObject* sw_get_track_userdata(Itdb_Track *track) {
    if (track->userdata) {
      Py_INCREF((PyObject *)track->userdata);
@@ -252,7 +260,7 @@ PyObject* sw_get_photo(GList *list, gint index) {
  void hash_table_to_pydict(gpointer key,
 			   gpointer value,
 			   gpointer user_data) {
-   PyDict_SetItemString((PyObject *)user_data, 
+   PyDict_SetItemString((PyObject *)user_data,
 			(char *)key,
 			PyString_FromString(value));
  }
@@ -264,8 +272,8 @@ PyObject* sw_get_photo(GList *list, gint index) {
      return Py_None;
    } else {
      sysinfo = PyDict_New();
-     g_hash_table_foreach(device->sysinfo, 
-			  hash_table_to_pydict, 
+     g_hash_table_foreach(device->sysinfo,
+			  hash_table_to_pydict,
 			  (gpointer) sysinfo);
      return Py_BuildValue("{s:s,s:i,s:i,s:O,s:i}",
 			  "mountpoint",
@@ -289,7 +297,7 @@ PyObject* sw_get_photo(GList *list, gint index) {
 #if !GLIB_CHECK_VERSION(2, 36, 0)
    g_type_init ();
 #endif
-   init_pygobject ();
+   pygobject_init(-1, -1, -1);
 #endif
 #endif
    PyDateTime_IMPORT;
@@ -298,9 +306,9 @@ PyObject* sw_get_photo(GList *list, gint index) {
 %include "gpod_doc.i"
 %include "@top_builddir@/config.h"
 
-// would be nicer to decode these utf8 strings into Unicode objects in the C
-// layer. Here we are leaving it to the Python side, and just giving them
-// utf8 encoded Strings.
+/* be nicer to decode these utf8 strings into Unicode objects in the C
+ layer. Here we are leaving it to the Python side, and just giving
+ them utf8 encoded Strings. */
 typedef char gchar;
 
 %typemap(in) time_t {
@@ -332,11 +340,11 @@ typedef char gchar;
   tmvalue.tm_sec  = PyDateTime_DATE_GET_SECOND(pydatetime);
 
   Py_DECREF(pydatetime);
-  
+
   $1 = mktime(&tmvalue);
   if ($1 == -1) {
-    PyErr_SetString(PyExc_ValueError, "$symname: Failed to parse provided time");	
-    SWIG_fail;    
+    PyErr_SetString(PyExc_ValueError, "$symname: Failed to parse provided time");
+    SWIG_fail;
   }
 }
 

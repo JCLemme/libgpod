@@ -7,8 +7,8 @@ AC_DEFUN([AM_CHECK_PYTHON_HEADERS],
 [AC_REQUIRE([AM_PATH_PYTHON])
 AC_MSG_CHECKING(for python development headers)
 dnl deduce PYTHON_INCLUDES
-py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
-py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
+py_prefix=`$PYTHON -c "import sys; print(sys.prefix)"`
+py_exec_prefix=`$PYTHON -c "import sys; print(sys.exec_prefix)"`
 PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
 if test "$py_prefix" != "$py_exec_prefix"; then
   PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
@@ -113,7 +113,7 @@ AC_DEFUN([LIBGPOD_CHECK_PYTHON],
                 dnl copied from the Redland RDF bindings, http://librdf.org/
                 if test `uname` = Darwin; then
                     PYTHON_LDFLAGS="-Wl,-F. -Wl,-F. -bundle"
-                    if $PYTHON -c 'import sys, string; sys.exit(string.find(sys.prefix,"Framework")+1)'; then
+                    if $PYTHON -c 'import sys; sys.exit(str.find(sys.prefix,"Framework")+1)'; then
                         :
                     else
                         PYTHON_LDFLAGS="$PYTHON_LDFLAGS -framework Python"
@@ -124,7 +124,30 @@ AC_DEFUN([LIBGPOD_CHECK_PYTHON],
                 AC_SUBST(PYTHON_LDFLAGS)
 
                 dnl check for mutagen module >= $PYTHON_MUTAGEN_MIN_VERSION
-                AM_CHECK_PYMOD(mutagen,$PYTHON_MUTAGEN_MIN_VERSION,mutagen.version_string,,with_python=no)
+                dnl This should work, but it doesn't work for python3
+                dnl AM_CHECK_PYMOD(mutagen,$PYTHON_MUTAGEN_MIN_VERSION,mutagen.version_string,,with_python=no)
+
+                prog="
+import sys
+try:
+    import mutagen
+except ImportError:
+    sys.exit(1)
+except:
+    if mutagen.version_string >= $PYTHON_MUTAGEN_MIN_VERSION:
+        sys.exit(1)
+    else:
+        sys.exit(0)
+                "
+
+                AC_MSG_CHECKING(for python module mutagen)
+                if $PYTHON -c "$prog"; then
+                    with_python=yes
+                    AC_MSG_RESULT(yes)
+                else
+                    with_python=no
+                    AC_MSG_RESULT(no)
+                fi
 
                 dnl this test should perhaps be re-enabled, but only produce a warning -- tmz
                 dnl if test "X$have_gdkpixbuf" = "Xyes" -a "X$have_pygobject" = "Xyes"; then

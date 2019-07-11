@@ -1,8 +1,9 @@
 SUBDIRS=src tools tests po m4 docs bindings 
 
 # build documentation when doing a distcheck.
+# --with-mono
 DISTCHECK_CONFIGURE_FLAGS = 				\
-	--enable-gtk-doc --with-mono 			\
+	--enable-gtk-doc  			\
 	--with-python --without-hal			\
 	--enable-udev --with-udev-dir=`pwd`/udev
 

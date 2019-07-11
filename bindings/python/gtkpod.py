@@ -81,7 +81,7 @@ def parse(filename, db, itunesdb_file=None):
     for line in open(filename).readlines():
         parts = line.strip().split("=", 1)
         if len(parts) != 2:
-            print parts
+            print(parts)
         name, value = parts
         if name == "id":
             if value == 'xxx':
@@ -123,8 +123,8 @@ def parse(filename, db, itunesdb_file=None):
                     track = tracks_by_sha[ext_block['md5_hash']]                    
             except KeyError:
                 # what should we do about this?
-                print "Failed to match hash from extended information file with one that we just calculated:"
-                print ext_block
+                print("Failed to match hash from extended information file with one that we just calculated:")
+                print(ext_block)
                 continue
             track['userdata'] = ext_block
 
