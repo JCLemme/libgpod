@@ -235,7 +235,7 @@ In order to compile the library on macOS 10.14 in combination with installing th
 ```
 export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
 
-sh autogen.sh --with-python=$(which python3) CPPFLAGS=$(pkg-config --cflags python3) CFLAGS="$CFLAGS $(pkg-config --cflags glib-2.0) $(pkg-config --cflags gdk-pixbuf-2.0) $(pkg-config --cflags libxml-2.0)" XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+sh autogen.sh --with-python=$(which python3) CPPFLAGS=$(pkg-config --cflags python3) CFLAGS="$CFLAGS $(pkg-config --cflags glib-2.0) $(pkg-config --cflags gdk-pixbuf-2.0) $(pkg-config --cflags libxml-2.0)"
 
 make
 
