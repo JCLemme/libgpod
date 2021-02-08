@@ -11,6 +11,8 @@ Makefile
 Makefile.in
 cscope.out
 
+build
+
 # /
 /.cproject
 /.project
