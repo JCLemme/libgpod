@@ -46,7 +46,7 @@ header_files = files(
     'rijndael.h',
 )
 
-library(meson.project_name(),
+libgpod = library(meson.project_name(),
     'db-artwork-debug.c',
     'db-artwork-parser.c',
     'db-artwork-writer.c',
@@ -78,6 +78,9 @@ library(meson.project_name(),
     install: true
 )
 
+
 lib_src_dir = meson.current_source_dir()
+lib_inc_dir = include_directories('.')
+libgpod_dep = declare_dependency(link_with: libgpod, include_directories: lib_inc_dir)
 
 install_headers('itdb.h', subdir: meson.project_name() + '-' + meson.project_version() / 'gpod')
