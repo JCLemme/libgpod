@@ -767,9 +767,9 @@ int itdb_callout_set_ipod_properties (ItdbBackend *backend, const char *dev,
         mounted_ipod_set_properties (backend, ipod_mountpoint);
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-        unmount (ipod_mountpoint, 0);
+        umount (ipod_mountpoint, 0);
 #elif defined(__linux__)
-        unmount (ipod_mountpoint);
+        umount (ipod_mountpoint);
 #else
         #error "Unknown Platform"
 #endif

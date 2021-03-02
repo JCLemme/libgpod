@@ -42,7 +42,7 @@ conf_data.set10('HAVE_STRUCT_TM_TM_GMTOFF', true)
 conf_data.set10('HAVE_UNISTD_H', true)
 conf_data.set10('HAVE_HAL', false) # HAL is not supported anymore
 conf_data.set10('_GNU_SOURCE', true)
-conf_data.set_quoted('TMPMOUNTDIR', '/tmp/')
+conf_data.set_quoted('TMPMOUNTDIR', '/tmp/ipod')
 configure_file(output : 'config.h',
                configuration : conf_data)
 configuration_inc = include_directories('.')
