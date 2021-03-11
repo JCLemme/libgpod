@@ -20,7 +20,7 @@ sgutils = compiler.find_library('libsgutils', required: get_option('sgutils'))
 gdk_pixbuf = dependency('gdk-pixbuf-2.0', required: get_option('artwork-db'))
 libxml = dependency('libxml-2.0', required: get_option('sysinfo'))
 libusb = dependency('libusb-1.0', required: get_option('sysinfo-ng'))
-libidev = dependency('libimobiledevice', required: get_option('ios'))
+libidev = dependency('libimobiledevice-1.0', required: get_option('ios'))
 
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required : false)
