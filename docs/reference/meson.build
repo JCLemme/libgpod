@@ -5,9 +5,13 @@ version_xml = configure_file(input: 'version.xml.in',
                              configuration: conf_data)
 config_inc = include_directories('.')
 
-gnome.gtkdoc('libgpod',
-    main_xml: 'libgpod-docs.xml',
-    dependencies: [version_xml, src_files, header_files],
-    include_directories: config_inc,
-    src_dir: lib_src_dir,
-    scan_args: ['--deprecated-guards="LIBGPOD_DISABLE_DEPRECATED"'])
+# workaround for https://github.com/mesonbuild/meson/issues/8315
+gtkdoc = find_program('gtkdoc-scan', required: get_option('doc'))
+if gtkdoc.found()
+    gnome.gtkdoc('libgpod',
+        main_xml: 'libgpod-docs.xml',
+        dependencies: [version_xml, src_files, header_files],
+        include_directories: config_inc,
+        src_dir: lib_src_dir,
+        scan_args: ['--deprecated-guards="LIBGPOD_DISABLE_DEPRECATED"'])
+endif
