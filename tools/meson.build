@@ -4,8 +4,9 @@ if sgutils.found()
     sysinfo_files += files('ipod-scsi.c')
     sysinfo_deps += [sgutils]
 endif
-if libidev.found()
+if libxml.found() and libidev.found()
     sysinfo_files += files('ipod-lockdown.c')
+    sysinfo_deps += [libxml, libidev]
 endif
 if libusb.found()
     sysinfo_files += files('ipod-usb.c')
