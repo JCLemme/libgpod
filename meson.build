@@ -28,16 +28,42 @@ m_dep = cc.find_library('m', required : false)
 conf_data = configuration_data()
 conf_data.set_quoted('GETTEXT_PACKAGE', 'libgpod')
 
-conf_data.set10('HAVE_GDKPIXBUF', gdk_pixbuf.found())
-conf_data.set10('HAVE_LIBXML', libxml.found())
-conf_data.set10('HAVE_LIBUSB', libusb.found())
+if gdk_pixbuf.found()
+  conf_data.set('HAVE_GDKPIXBUF', 1)
+else
+  conf_data.set('HAVE_GDKPIXBUF', false)
+endif
+
+if gdk_pixbuf.found()
+  conf_data.set('HAVE_GDKPIXBUF', 1)
+else
+  conf_data.set('HAVE_GDKPIXBUF', false)
+endif
+
+if libxml.found()
+  conf_data.set('HAVE_LIBXML', 1)
+else
+  conf_data.set('HAVE_LIBXML', false)
+endif
+
+if libusb.found()
+  conf_data.set('HAVE_LIBUSB', 1)
+else
+  conf_data.set('HAVE_LIBUSB', false)
+endif
 
 conf_data.set10('HAVE_G_CHECKSUM_RESET', true)
 conf_data.set10('HAVE_G_INT64_EQUAL', true)
 conf_data.set10('HAVE_G_INT64_HASH', true)
 conf_data.set10('HAVE_G_MAPPED_FILE_UNREF', true)
 conf_data.set10('HAVE_LOCALTIME_R', true)
-conf_data.set10('HAVE_SGUTILS', sgutils.found())
+
+if sgutils.found()
+  conf_data.set('HAVE_SGUTILS', 1)
+else
+  conf_data.set('HAVE_SGUTILS', false)
+endif
+
 conf_data.set10('HAVE_STRUCT_TM_TM_GMTOFF', true)
 conf_data.set10('HAVE_UNISTD_H', true)
 conf_data.set10('HAVE_HAL', false) # HAL is not supported anymore
