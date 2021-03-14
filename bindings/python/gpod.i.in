@@ -45,7 +45,7 @@ version_info = version.split(".")
 
 %module(docstring=DOCSTRING) gpod
 %{
-#include "@top_builddir@/config.h"
+#include "@CONFIG_H@"
 #include "db-artwork-debug.h"
 #include "db-artwork-parser.h"
 #include "db-image-parser.h"
@@ -304,7 +304,7 @@ PyObject* sw_get_photo(GList *list, gint index) {
 %}
 
 %include "gpod_doc.i"
-%include "@top_builddir@/config.h"
+%include "@CONFIG_H@"
 
 /* be nicer to decode these utf8 strings into Unicode objects in the C
  layer. Here we are leaving it to the Python side, and just giving
@@ -516,4 +516,4 @@ PyObject* sw_get_photo(GList *list, gint index);
 PyObject* sw_get_photoalbum_members(Itdb_PhotoAlbum *album);
 PyObject* sw_ipod_device_to_dict(Itdb_Device *device);
 
-%include "@top_srcdir@/src/itdb.h"
+%include "@ITDB_H@"

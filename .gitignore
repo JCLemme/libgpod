@@ -64,7 +64,6 @@ bindings/mono/libgpod-sharp/libgpod-sharp.pidb
 /bindings/python/gpod.i
 /bindings/python/gpod.py
 /bindings/python/gpod.pyc
-/bindings/python/gpod_doc.i
 /bindings/python/gpod_wrap.c
 /bindings/python/gtkpod.pyc
 /bindings/python/ipod.pyc

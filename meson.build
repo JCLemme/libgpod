@@ -69,8 +69,8 @@ conf_data.set10('HAVE_UNISTD_H', true)
 conf_data.set10('HAVE_HAL', false) # HAL is not supported anymore
 conf_data.set10('_GNU_SOURCE', true)
 conf_data.set_quoted('TMPMOUNTDIR', '/tmp/ipod')
-configure_file(output : 'config.h',
-               configuration : conf_data)
+config_h = configure_file(output : 'config.h',
+                          configuration : conf_data)
 configuration_inc = include_directories('.')
 add_global_arguments('-DHAVE_CONFIG_H=1', language : 'c')
 add_global_arguments('-DLIBGPOD_BLOB_DIR="/usr/lib64/libgpod"', language : 'c')
@@ -78,3 +78,4 @@ add_global_arguments('-DLIBGPOD_BLOB_DIR="/usr/lib64/libgpod"', language : 'c')
 subdir('src')
 subdir('docs')
 subdir('tools')
+subdir('bindings')
