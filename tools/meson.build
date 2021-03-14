@@ -19,7 +19,7 @@ executable('ipod-read-sysinfo-extended', sysinfo_files,
     dependencies: sysinfo_deps)
 
 if udev.found() and libxml.found()
-    setinfo_files = files(
+    ipod_setinfo_files = files(
         'udev-backend.c',
         'generic-callout.c',
         'itdb-syslog.c',
@@ -27,11 +27,11 @@ if udev.found() and libxml.found()
         lib_src_dir / 'itdb_plist.c'
     )
     if sgutils.found()
-        setinfo_files += files('ipod-scsi.c')
+        ipod_setinfo_files += files('ipod-scsi.c')
     endif
 
     if libusb.found()
-        setinfo_files += files('ipod-usb.c')
+        ipod_setinfo_files += files('ipod-usb.c')
     endif
 
     dir_system_udev = get_option('prefix') / 'lib' / 'udev'
@@ -40,11 +40,23 @@ if udev.found() and libxml.found()
         dir_udev = dir_system_udev
     endif
 
-    executable('ipod-set-info', setinfo_files,
+    executable('ipod-set-info', ipod_setinfo_files,
         install: true,
         install_dir: dir_udev,
         include_directories: configuration_inc,
         dependencies: sysinfo_deps + [libxml, gobject])
+
+    iphone_setinfo_files = files(
+        'iphone-callout.c',
+        'ipod-lockdown.c',
+        'itdb-syslog.c',
+    )
+
+    executable('iphone-set-info', iphone_setinfo_files,
+        install: true,
+        install_dir: dir_udev,
+        include_directories: configuration_inc,
+        dependencies: sysinfo_deps + [libxml])
 
     dir_udev_rules    = dir_udev / 'rules.d'
     install_data('90-libgpod.rules', install_dir : dir_udev_rules)
