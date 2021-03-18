@@ -1,0 +1,1 @@
+subdir('libgpod-sharp')
