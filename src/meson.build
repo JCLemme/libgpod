@@ -46,41 +46,25 @@ header_files = files(
     'rijndael.h',
 )
 
-libgpod = library(meson.project_name(),
-    'db-artwork-debug.c',
-    'db-artwork-parser.c',
-    'db-artwork-writer.c',
-    'db-image-parser.c',
-    'db-parse-context.c',
-    'itdb_artwork.c',
-    'itdb_chapterdata.c',
-    'itdb_device.c',
-    'itdb_hash58.c',
-    'itdb_hash72.c',
-    'itdb_hashAB.c',
-    'itdb_iphone.c',
-    'itdb_itunesdb.c',
-    'itdb_photoalbum.c',
-    'itdb_playlist.c',
-    'itdb_plist.c',
-    'itdb_sqlite.c',
-    'itdb_sysinfo_extended_parser.c',
-    'itdb_thumb.c',
-    'itdb_track.c',
-    'itdb_tzinfo.c',
-    'itdb_zlib.c',
-    'ithumb-writer.c',
-    'pixmaps.c',
-    'rijndael.c',
+libgpod = library(meson.project_name(), src_files,
     include_directories: configuration_inc,
     dependencies: [glib, gdk_pixbuf, libxml, m_dep, gobject, sqlite, plist, gmodule, zlib],
-    version: '4.3.2',
+    version: library_version,
     install: true
 )
-
 
 lib_src_dir = meson.current_source_dir()
 lib_inc_dir = include_directories('.')
 libgpod_dep = declare_dependency(link_with: libgpod, include_directories: lib_inc_dir)
 
-install_headers('itdb.h', subdir: meson.project_name() + '-' + meson.project_version() / 'gpod')
+install_include_dir = meson.project_name() + '-' + include_version / 'gpod'
+install_headers('itdb.h', subdir: install_include_dir)
+
+pkg = import('pkgconfig')
+pkg.generate(libraries: libgpod,
+             version: include_version,
+             subdirs: install_include_dir,
+             name: libgpod.name(),
+             filebase: libgpod.name(),
+             description: 'Library to access iPod content.')
+

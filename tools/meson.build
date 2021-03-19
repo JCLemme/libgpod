@@ -1,39 +1,54 @@
-sysinfo_files = files('read-sysinfoextended.c', 'itdb-syslog.c')
-sysinfo_deps = [glib, libgpod_dep]
-if sgutils.found()
-    sysinfo_files += files('ipod-scsi.c')
-    sysinfo_deps += [sgutils]
-endif
+# compilation units that depend on libraries
+disabled_obj = [[], [], [disabler()]]
+
 if libxml.found() and libidev.found()
-    sysinfo_files += files('ipod-lockdown.c')
-    sysinfo_deps += [libxml, libidev]
-endif
-if libusb.found()
-    sysinfo_files += files('ipod-usb.c')
-    sysinfo_deps += [libusb]
+    il_deps = [libxml, libidev]
+    ipod_lockdown = [files('ipod-lockdown.c'), il_deps, il_deps]
+else
+    ipod_lockdown = disabled_obj
 endif
 
-executable('ipod-read-sysinfo-extended', sysinfo_files,
+if sgutils.found()
+    ipod_scsi = [files('ipod-scsi.c'), [sgutils], [sgutils]]
+else
+    ipod_scsi = disabled_obj
+endif
+
+if libusb.found()
+    ipod_usb = [files('ipod-usb.c'), [libusb], [libusb]]
+else
+    ipod_usb = disabled_obj
+endif
+
+if libxml.found()
+    itdb_plist = [files(lib_src_dir / 'itdb_plist.c'), [libxml], [libxml]]
+else
+    itdb_plist = disabled_obj
+endif
+
+# actual tools
+tool_deps = [glib, libgpod_dep]
+
+executable('ipod-read-sysinfo-extended',
+    'read-sysinfoextended.c', 'itdb-syslog.c',
+    ipod_lockdown[0],
+    ipod_scsi[0],
+    ipod_usb[0],
     install: true,
     include_directories: configuration_inc,
-    dependencies: sysinfo_deps)
+    dependencies: [tool_deps,
+        ipod_lockdown[1], ipod_scsi[1], ipod_usb[1]])
 
-if udev.found() and libxml.found()
+if udev.found()
     ipod_setinfo_files = files(
         'udev-backend.c',
         'generic-callout.c',
         'itdb-syslog.c',
-        lib_src_dir / 'itdb_sysinfo_extended_parser.c',
-        lib_src_dir / 'itdb_plist.c'
-    )
-    if sgutils.found()
-        ipod_setinfo_files += files('ipod-scsi.c')
-    endif
-
-    if libusb.found()
-        ipod_setinfo_files += files('ipod-usb.c')
-    endif
-
+        lib_src_dir / 'itdb_sysinfo_extended_parser.c') + [
+        itdb_plist[0],
+        ipod_scsi[0],
+        ipod_usb[0],
+    ]
     dir_system_udev = get_option('prefix') / 'lib' / 'udev'
     dir_udev = get_option('udev-dir')
     if dir_udev == ''
@@ -44,33 +59,30 @@ if udev.found() and libxml.found()
         install: true,
         install_dir: dir_udev,
         include_directories: configuration_inc,
-        dependencies: sysinfo_deps + [libxml, gobject])
+        dependencies: [tool_deps, gobject,
+            itdb_plist[2], ipod_scsi[1], ipod_usb[1]])
 
     iphone_setinfo_files = files(
         'iphone-callout.c',
-        'ipod-lockdown.c',
         'itdb-syslog.c',
+        ipod_lockdown[0],
     )
 
     executable('iphone-set-info', iphone_setinfo_files,
         install: true,
         install_dir: dir_udev,
         include_directories: configuration_inc,
-        dependencies: sysinfo_deps + [libxml])
+        dependencies: [tool_deps, libxml, ipod_lockdown[2]])
 
     dir_udev_rules    = dir_udev / 'rules.d'
     install_data('90-libgpod.rules', install_dir : dir_udev_rules)
 endif
 
-if sgutils.found()
-    time_sync_files = files(
-        'ipod-time-sync.c',
-        'ipod-scsi.c',
-        'itdb-syslog.c',
-    )
+time_sync_files = files(
+    'ipod-time-sync.c',
+    'itdb-syslog.c') + [ipod_scsi[0]]
 
-    executable('ipod-time-sync', time_sync_files,
-        install: true,
-        include_directories: configuration_inc,
-        dependencies: [glib, sgutils])
-endif
+executable('ipod-time-sync', time_sync_files,
+    install: true,
+    include_directories: configuration_inc,
+    dependencies: [glib, ipod_scsi[2]])

@@ -4,6 +4,9 @@ project('gpod', 'c',
                      'c_std=c11',
                      'buildtype=debugoptimized'])
 
+library_version = '7.3.3'
+include_version = '1.0'
+
 gnome = import('gnome')
 
 glib = dependency('glib-2.0')
