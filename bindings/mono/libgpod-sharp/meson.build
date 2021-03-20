@@ -1,16 +1,7 @@
-glib_sharp = dependency('glib-sharp-2.0')
-gtk_sharp = dependency('gtk-sharp-2.0')
+glib_sharp = dependency('glib-sharp-2.0', required: get_option('mono'), disabler: true)
+gtk_sharp = dependency('gtk-sharp-2.0', required: get_option('mono'), disabler: true)
 
 fs = import('fs')
-
-lib_name = fs.name(libgpod.full_path())
-sharp_conf_data = configuration_data()
-sharp_conf_data.set('DLNAME', lib_name)
-sharp_config = configure_file(input: 'libgpod-sharp.dll.config.in',
-                              output: 'libgpod-sharp.dll.config',
-                              install: true,
-                              install_dir: get_option('libdir'),
-                              configuration: sharp_conf_data)
 
 libgpod_sharp = library('libgpod-sharp',
     'Artwork.cs',
@@ -30,6 +21,17 @@ libgpod_sharp = library('libgpod-sharp',
     install: true,
     cs_args: ['-unsafe+'],
     dependencies: [glib_sharp, gtk_sharp])
+
+if libgpod_sharp.found()
+    lib_name = fs.name(libgpod.full_path())
+    sharp_conf_data = configuration_data()
+    sharp_conf_data.set('DLNAME', lib_name)
+    sharp_config = configure_file(input: 'libgpod-sharp.dll.config.in',
+                                  output: 'libgpod-sharp.dll.config',
+                                  install: true,
+                                  install_dir: get_option('libdir'),
+                                  configuration: sharp_conf_data)
+endif
 
 pkg = import('pkgconfig')
 libs = libgpod_sharp
