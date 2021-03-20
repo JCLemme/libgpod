@@ -64,9 +64,7 @@ if udev.found()
 
     iphone_setinfo_files = files(
         'iphone-callout.c',
-        'itdb-syslog.c',
-        ipod_lockdown[0],
-    )
+        'itdb-syslog.c') + ipod_lockdown[0]
 
     executable('iphone-set-info', iphone_setinfo_files,
         install: true,
