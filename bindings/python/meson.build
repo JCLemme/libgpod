@@ -9,22 +9,28 @@ if swig.found() and py3_inst.found()
                         'CONFIG_H': meson.source_root() / '@0@'.format(config_h),
                         'ITDB_H': lib_src_dir / 'itdb.h'}
     gpod_i = configure_file(input: 'gpod.i.in',
-                            output: 'gpod.i',
-                            configuration: python_conf_data)
+        output: 'gpod.i',
+        configuration: python_conf_data)
 
-    gpod_c = custom_target('gpod_c',
-                           input: gpod_i,
-                           output: 'gpod.c',
-                           command: [swig, '-python', '-py3', '-Wall', '-Wextra',
-                                     '-o', '@OUTPUT@',
-                                     '-I@CURRENT_SOURCE_DIR@',
-                                     '-MMD', '-MF', '@DEPFILE@',
-                                     '@INPUT@'],
-                           depfile: 'gpod.c.dep')
+    gpod_swig = custom_target('gpod_c',
+        input: gpod_i,
+        output: ['gpod_wrap.c', 'gpod.py'],
+        command: [swig, '-python', '-py3', '-Wall', '-Wextra',
+                  '-I@CURRENT_SOURCE_DIR@',
+                  '-MMD', '-MF', '@DEPFILE@',
+                  '@INPUT@'],
+        depfile: 'gpod.c.dep')
+    gpod_wrap_c = gpod_swig[0]
+    gpod_py = gpod_swig[1]
 
-    gpod_mod = py3_inst.extension_module('gpod',
-        gpod_c,
+    py_module = get_option('prefix') + py3_inst.get_path('purelib') / meson.project_name()
+    gpod_mod = py3_inst.extension_module('_gpod',
+        gpod_wrap_c,
+        install: true,
+        subdir: py_module,
         include_directories: configuration_inc,
         dependencies: [libgpod_dep, py3_inst.dependency(), glib, gdk_pixbuf, pygobject]
     )
+    py_sources = files('__init__.py', 'ipod.py', 'gtkpod.py') + [gpod_py.full_path()]
+    install_data(py_sources, install_dir: py_module)
 endif
