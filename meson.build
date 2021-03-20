@@ -36,8 +36,6 @@ cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required : false)
 
 conf_data = configuration_data()
-conf_data.set_quoted('GETTEXT_PACKAGE', 'libgpod')
-
 if gdk_pixbuf.found()
   conf_data.set('HAVE_GDKPIXBUF', 1)
 else
@@ -85,6 +83,7 @@ configuration_inc = include_directories('.')
 add_global_arguments('-DHAVE_CONFIG_H=1', language : 'c')
 add_global_arguments('-DLIBGPOD_BLOB_DIR="/usr/lib64/libgpod"', language : 'c')
 
+subdir('po')
 subdir('src')
 subdir('docs')
 subdir('tools')

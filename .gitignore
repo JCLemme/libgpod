@@ -96,7 +96,6 @@ bindings/mono/libgpod-sharp/libgpod-sharp.pidb
 
 # /po/
 /po/Makefile.in.in
-/po/POTFILES
 /po/*.gmo
 /po/*.mo
 /po/stamp-it
