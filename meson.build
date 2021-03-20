@@ -4,8 +4,15 @@ project('gpod', 'c',
                      'c_std=c11',
                      'buildtype=debugoptimized'])
 
-library_version = '7.3.3'
-include_version = '1.0'
+# ABI versioning: <major>.<minor>.<micro>
+# major: ABI incompatible change
+# minor: ABI compatible change (addition)
+# micro: change that does not affect the ABI
+abi_version = '4.3.2'
+# API versioning: <major>.<minor>
+# major: API incompatible change
+# minor: API compatible change (addition)
+api_version = '1.0'
 
 gnome = import('gnome')
 
