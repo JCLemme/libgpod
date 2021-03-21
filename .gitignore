@@ -99,6 +99,7 @@ bindings/mono/libgpod-sharp/libgpod-sharp.pidb
 /po/*.gmo
 /po/*.mo
 /po/stamp-it
+/po/gpod.pot
 
 # /tests/
 /tests/get-timezone
