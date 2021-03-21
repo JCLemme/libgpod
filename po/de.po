@@ -3,22 +3,22 @@
 # Copyright (C) 2003-2005 Jörg Schuler
 # Jörg Schuler <jcsjcs at users.sourceforge.net>
 #
-#
 # Kai-Ove Pietsch <kaiovepietsch@yahoo.de>, 2009.
+# Gerion Entrup <gerion.entrup@flump.de>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-21 02:07+0100\n"
-"PO-Revision-Date: 2009-07-25 10:20+0200\n"
-"Last-Translator: Kai-Ove Pietsch <kaiovepietsch@yahoo.de>\n"
-"Language-Team: deutsch <de@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-03-21 02:38+0100\n"
+"Last-Translator: Gerion Entrup <gerion.entrup@flump.de>\n"
+"Language-Team: n/a\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 20.12.3\n"
 
 #: src/db-artwork-parser.c:141
 #, c-format
@@ -213,54 +213,44 @@ msgid "Classic (Black)"
 msgstr "Classic (schwarz)"
 
 #: src/itdb_device.c:413
-#, fuzzy
 msgid "Touch (Silver)"
-msgstr "Nano (silber)"
+msgstr "Touch (silber)"
 
 #: src/itdb_device.c:414
-#, fuzzy
 msgid "Shuffle (Black)"
-msgstr "Shuffle (blau)"
+msgstr "Shuffle (schwarz)"
 
 #: src/itdb_device.c:415
-#, fuzzy
 msgid "iPhone (White)"
-msgstr "iPhone (1)"
+msgstr "iPhone (weiß)"
 
 #: src/itdb_device.c:416
-#, fuzzy
 msgid "iPhone (Black)"
-msgstr "iPhone (1)"
+msgstr "iPhone (schwarz)"
 
 #: src/itdb_device.c:417
-#, fuzzy
 msgid "Shuffle (Gold)"
-msgstr "Shuffle (rot)"
+msgstr "Shuffle (gold)"
 
 #: src/itdb_device.c:418
-#, fuzzy
 msgid "Shuffle (Stainless)"
-msgstr "Shuffle (silber)"
+msgstr "Shuffle (Edelstahl)"
 
 #: src/itdb_device.c:419 src/itdb_device.c:457
-#, fuzzy
 msgid "iPad"
-msgstr "iPod"
+msgstr "iPad"
 
 #: src/itdb_device.c:420
-#, fuzzy
 msgid "Shuffle (Yellow)"
-msgstr "Shuffle (rot)"
+msgstr "Shuffle (gelb)"
 
 #: src/itdb_device.c:421
-#, fuzzy
 msgid "Shuffle (Space Gray)"
-msgstr "Shuffle (silber)"
+msgstr "Shuffle (Space Grau)"
 
 #: src/itdb_device.c:422
-#, fuzzy
 msgid "Shuffle (Slate)"
-msgstr "Shuffle (silber)"
+msgstr "Shuffle (Schiefer)"
 
 #: src/itdb_device.c:429
 msgid "Regular (1st Gen.)"
@@ -343,49 +333,40 @@ msgid "iPhone"
 msgstr "iPhone"
 
 #: src/itdb_device.c:450
-#, fuzzy
 msgid "Shuffle (4th Gen.)"
-msgstr "Shuffle (1. Generation)"
+msgstr "Shuffle (4. Generation)"
 
 #: src/itdb_device.c:451
-#, fuzzy
 msgid "Touch (2nd Gen.)"
-msgstr "Nano (2. Generation)"
+msgstr "Touch (2. Generation)"
 
 #: src/itdb_device.c:452
-#, fuzzy
 msgid "iPhone 3G"
-msgstr "iPhone"
+msgstr "iPhone 3G"
 
 #: src/itdb_device.c:453
-#, fuzzy
 msgid "iPhone 3GS"
-msgstr "iPhone"
+msgstr "iPhone 3GS"
 
 #: src/itdb_device.c:455
-#, fuzzy
 msgid "Nano with camera (5th Gen.)"
-msgstr "Nano Video (4. Generation)"
+msgstr "Nano Video (5. Generation)"
 
 #: src/itdb_device.c:456
-#, fuzzy
 msgid "Touch (3rd Gen.)"
-msgstr "Standard (3. Generation)"
+msgstr "Touch (3. Generation)"
 
 #: src/itdb_device.c:458
-#, fuzzy
 msgid "iPhone 4"
-msgstr "iPhone"
+msgstr "iPhone 4"
 
 #: src/itdb_device.c:459
-#, fuzzy
 msgid "Touch (4th Gen.)"
-msgstr "Standard (4. Generation)"
+msgstr "Touch (4. Generation)"
 
 #: src/itdb_device.c:460
-#, fuzzy
 msgid "Nano touch (6th Gen.)"
-msgstr "Nano Video (4. Generation)"
+msgstr "Nano Touch (6. Generation)"
 
 #: src/itdb_device.c:1166
 #, c-format
@@ -426,10 +407,10 @@ msgstr ""
 "iTunesStats Datei ('%s'): Länge der Einträge kleiner als erwartet (%d<18)."
 
 #: src/itdb_itunesdb.c:1097
-#, fuzzy, c-format
+#, c-format
 msgid "iTunesStats file ('%s'): entry length smaller than expected (%d<32)."
 msgstr ""
-"iTunesStats Datei ('%s'): Länge der Einträge kleiner als erwartet (%d<18)."
+"iTunesStats Datei ('%s'): Länge der Einträge kleiner als erwartet (%d<32)."
 
 #: src/itdb_itunesdb.c:1618
 #, c-format
@@ -600,7 +581,7 @@ msgstr ""
 #: src/itdb_itunesdb.c:3086
 #, c-format
 msgid "%s: Unexpected length %d for genius_cuid!\n"
-msgstr ""
+msgstr "%s: Unerwartete Länge %d für genius_cuid!\n"
 
 #: src/itdb_itunesdb.c:3118
 #, c-format
@@ -644,54 +625,45 @@ msgstr ""
 "Das Kontrollverzeichnis konnte nicht gefunden werden: '%s' (oder ähnlich)."
 
 #: src/itdb_itunesdb.c:3420
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find an iPod database on %s."
-msgstr "Nicht auf dem iPod gefunden: '%s'\n"
+msgstr "Keine iPod-Datenbank auf %s gefunden."
 
 #: src/itdb_itunesdb.c:6059
-#, fuzzy
 msgid "Error writing list of tracks (mhsd type 1)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Liste von Tracks (mhsd type 1)"
 
 #: src/itdb_itunesdb.c:6068
-#, fuzzy
 msgid "Error writing special podcast playlists (mhsd type 3)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der speziellen Podcast-Playlist (mhsd type 3)"
 
 #: src/itdb_itunesdb.c:6076
-#, fuzzy
 msgid "Error writing standard playlists (mhsd type 2)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Standard-Playlist (mhsd type 2)"
 
 #: src/itdb_itunesdb.c:6085
-#, fuzzy
 msgid "Error writing list of albums (mhsd type 4)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Albumliste (mhsd type 4)"
 
 #: src/itdb_itunesdb.c:6093
-#, fuzzy
 msgid "Error writing list of artists (mhsd type 8)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Interpretenliste (mhsd type 8) "
 
 #: src/itdb_itunesdb.c:6102
-#, fuzzy
 msgid "Error writing mhsd type 6"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben (mhsd type 6) "
 
 #: src/itdb_itunesdb.c:6111
-#, fuzzy
 msgid "Error writing mhsd type 10"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben (mhsd type 10) "
 
 #: src/itdb_itunesdb.c:6120
-#, fuzzy
 msgid "Error writing mhsd5 playlists"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben von mhsd5-Playlisten"
 
 #: src/itdb_itunesdb.c:6130
-#, fuzzy
 msgid "Error writing mhsd type 9"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben (mhsd type 9)"
 
 #: src/itdb_itunesdb.c:6513
 #, c-format
@@ -699,14 +671,12 @@ msgid "Path not found: '%s' (or similar)."
 msgstr "Pfad nicht gefunden: '%s' (oder ähnlich)."
 
 #: src/itdb_itunesdb.c:7033
-#, fuzzy
 msgid "Error writing list of tracks (hths)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Trackliste (hths)"
 
 #: src/itdb_itunesdb.c:7042
-#, fuzzy
 msgid "Error writing playlists (hphs)"
-msgstr "Fehler beim Schreiben in die Datei '%s' (%s)."
+msgstr "Fehler beim Schreiben der Playlisten (hphs)"
 
 #: src/itdb_itunesdb.c:7124
 #, c-format
@@ -828,10 +798,10 @@ msgstr ""
 "daher nicht unterstützt."
 
 #: src/itdb_playlist.c:81
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown action (0x%x) in smart playlist will be ignored.\n"
 msgstr ""
-"Unbekannte Aktion (%d) in intelligenter Wiedergabeliste wird ignoriert.\n"
+"Unbekannte Aktion (0x%x) in intelligenter Wiedergabeliste wird ignoriert.\n"
 
 #: src/itdb_thumb.c:326
 #, c-format
@@ -844,16 +814,16 @@ msgstr "Einhängepunkt wurde nicht gesetzt.\n"
 
 #: src/itdb_zlib.c:123 src/itdb_zlib.c:179
 msgid "Header is too small for iTunesCDB!\n"
-msgstr ""
+msgstr "Kopfzeile ist zu klein für die iTunesCDB!\n"
 
 #: src/itdb_zlib.c:151
-#, fuzzy, c-format
+#, c-format
 msgid "iTunesCDB '%s' could not be decompressed"
-msgstr "Auf Datei '%s' konnte nicht zugegriffen werden (%s)."
+msgstr "iTunesCDB '%s' konnte nicht dekomprimiert werden"
 
 #: src/itdb_zlib.c:201
 msgid "Error compressing iTunesCDB file!\n"
-msgstr ""
+msgstr "Fehler beim Komprimieren der iTunesCDB-Datei!\n"
 
 #: tests/test-photos.c:39
 #, c-format
@@ -998,14 +968,14 @@ msgid "Error initialising iPod, unknown error\n"
 msgstr "Konnte iPod nicht initialisieren: Unbekannter Fehler\n"
 
 #: tools/ipod-time-sync.c:38
-#, fuzzy, c-format
+#, c-format
 msgid "usage: %s <device> [timezone]\n"
-msgstr "Benutzung: %s <Gerät> <Mountpoint>\n"
+msgstr "Benutzung: %s <Gerät> [Zeitzone]\n"
 
 #: tools/read-sysinfoextended.c:82
-#, fuzzy, c-format
+#, c-format
 msgid "usage: %s <device|uuid|bus device> <mountpoint>\n"
-msgstr "Benutzung: %s <Gerät> <Mountpoint>\n"
+msgstr "Benutzung: %s <Gerät|UUID|Bus-Gerät> <Mountpoint>\n"
 
 #: tools/read-sysinfoextended.c:121
 #, c-format
