@@ -56,7 +56,9 @@ libgpod = library(meson.project_name(), src_files,
 
 lib_src_dir = meson.current_source_dir()
 lib_inc_dir = include_directories('.')
-libgpod_dep = declare_dependency(link_with: libgpod, include_directories: lib_inc_dir)
+libgpod_dep = declare_dependency(link_with: libgpod,
+                                 include_directories: lib_inc_dir,
+                                 dependencies: [glib, gdk_pixbuf])
 
 install_include_dir = meson.project_name() + '-' + api_version / 'gpod'
 install_headers('itdb.h', subdir: install_include_dir)
