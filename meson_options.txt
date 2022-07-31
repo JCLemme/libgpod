@@ -2,6 +2,14 @@ option('doc',
        type: 'feature',
        value: 'auto',
        description: 'Generate html documentation (requires gtk-doc).')
+option('test',
+       type: 'boolean',
+       value: 'true',
+       description: 'Build tests.')
+option('taglib',
+       type: 'feature',
+       value: 'auto',
+       description: 'Build tests that require taglib.')
 option('udev',
        type: 'feature',
        value: 'auto',

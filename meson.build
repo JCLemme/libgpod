@@ -32,6 +32,10 @@ libxml = dependency('libxml-2.0', required: get_option('sysinfo'))
 libusb = dependency('libusb-1.0', required: get_option('sysinfo-ng'))
 libidev = dependency('libimobiledevice-1.0', required: get_option('ios'))
 
+if get_option('test')
+  taglib = dependency('taglib', required: get_option('taglib'))
+endif
+
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required : false)
 
@@ -87,3 +91,6 @@ subdir('src')
 subdir('docs')
 subdir('tools')
 subdir('bindings')
+if get_option('test')
+  subdir('tests')
+endif

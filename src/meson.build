@@ -54,6 +54,9 @@ libgpod = library(meson.project_name(), src_files,
     install: true
 )
 
+# needed for tests/test-sysinfo-extended-parsing
+sysinfo_test_files = files('itdb_plist.c', 'itdb_sysinfo_extended_parser.c')
+
 lib_src_dir = meson.current_source_dir()
 lib_inc_dir = include_directories('.')
 libgpod_dep = declare_dependency(link_with: libgpod,
