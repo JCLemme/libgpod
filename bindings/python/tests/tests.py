@@ -68,7 +68,7 @@ class TestiPodFunctions(unittest.TestCase):
             self.assertEqual(len(self.db), n)
         self.db.copy_delayed_files()
         for track in self.db:
-            self.failUnless(os.path.exists(track.ipod_filename()))
+            self.assertTrue(os.path.exists(track.ipod_filename()))
 
     def testAddRemoveTrack(self):
         self.testAddTrack()
@@ -97,7 +97,7 @@ class TestiPodFunctions(unittest.TestCase):
     def testTrackContainerMethods(self):
         self.testAddTrack()
         track = self.db[0]
-        self.failUnless('title' in track)
+        self.assertTrue('title' in track)
 
     def testVersion(self):
         self.assertEqual(type(gpod.version_info),
@@ -128,7 +128,7 @@ class TestPhotoDatabase(unittest.TestCase):
         for i in range(0, 5):
             count = len(self.db.PhotoAlbums)
             _ = self.db.new_PhotoAlbum(title="Test %s" % i)
-            self.failUnless(len(self.db.PhotoAlbums) == (count + 1))
+            self.assertTrue(len(self.db.PhotoAlbums) == (count + 1))
 
     def testAddRemovePhotoAlbum(self):
         """ Test removing all albums but "Photo Library" """
@@ -151,8 +151,8 @@ class TestPhotoDatabase(unittest.TestCase):
 
         pas = [x for x in self.db.PhotoAlbums if x.name != "Photo Library"]
         for pa in pas:
-            self.failUnless(pa.name in bad)
-            self.failUnless(pa.name not in good)
+            self.assertTrue(pa.name in bad)
+            self.assertTrue(pa.name not in good)
 
     def testEnumeratePhotoAlbums(self):
         [photo for photo in self.db.PhotoAlbums]
@@ -161,7 +161,7 @@ class TestPhotoDatabase(unittest.TestCase):
         photoname = os.path.join(self.mp,
                                  'iPod_Control',
                                  'tiny.png')
-        self.failUnless(os.path.exists(photoname))
+        self.assertTrue(os.path.exists(photoname))
         for n in range(1, 5):
             _ = self.db.new_Photo(filename=photoname)
             self.assertEqual(len(self.db), n)
@@ -173,7 +173,7 @@ class TestPhotoDatabase(unittest.TestCase):
         for p in self.db.PhotoAlbums[0]:
             pa.add(p)
         self.assertEqual(len(pa), len(self.db.PhotoAlbums[0]))
-        self.failUnless(len(pa) > count)
+        self.assertTrue(len(pa) > count)
 
     def testRemovePhotoFromAlbum(self):
         self.testAddPhotoToAlbum()
@@ -181,13 +181,13 @@ class TestPhotoDatabase(unittest.TestCase):
         for p in pa[:]:
             pa.remove(p)
         # make sure we didn't delete the photo
-        self.failUnless(len(self.db.PhotoAlbums[0]) > 0)
+        self.assertTrue(len(self.db.PhotoAlbums[0]) > 0)
         # but that we did remove them from album
         self.assertEqual(len(pa), 0)
 
     def testAddRemovePhoto(self):
         self.testAddPhoto()
-        self.failUnless(len(self.db) > 0)
+        self.assertTrue(len(self.db) > 0)
         for photo in self.db.PhotoAlbums[0][:]:
             self.db.remove(photo)
         self.assertEqual(len(self.db), 0)
@@ -195,7 +195,7 @@ class TestPhotoDatabase(unittest.TestCase):
     def testAddCountPhotos(self):
         count = len(self.db)
         self.testAddPhoto()
-        self.failUnless(len(self.db) > count)
+        self.assertTrue(len(self.db) > count)
 
     def testEnumeratePhotos(self):
         for album in self.db.PhotoAlbums:
@@ -204,7 +204,7 @@ class TestPhotoDatabase(unittest.TestCase):
     def testPhotoContainerMethods(self):
         self.testAddPhoto()
         photo = self.db[0]
-        self.failUnless('id' in photo)
+        self.assertTrue('id' in photo)
 
 
 if __name__ == '__main__':
