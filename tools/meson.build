@@ -34,6 +34,7 @@ executable('ipod-read-sysinfo-extended',
     ipod_lockdown[0],
     ipod_scsi[0],
     ipod_usb[0],
+    c_args: '-DHAVE_CONFIG_H=1',
     install: true,
     include_directories: configuration_inc,
     dependencies: [tool_deps,
@@ -56,6 +57,7 @@ if udev.found()
     endif
 
     executable('ipod-set-info', ipod_setinfo_files,
+        c_args: '-DHAVE_CONFIG_H=1',
         install: true,
         install_dir: dir_udev,
         include_directories: configuration_inc,
@@ -81,6 +83,7 @@ time_sync_files = files(
     'itdb-syslog.c') + [ipod_scsi[0]]
 
 executable('ipod-time-sync', time_sync_files,
+    c_args: '-DHAVE_CONFIG_H=1',
     install: true,
     include_directories: configuration_inc,
     dependencies: [glib, ipod_scsi[2]])

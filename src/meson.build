@@ -47,6 +47,7 @@ header_files = files(
 )
 
 libgpod = library(meson.project_name(), src_files,
+    c_args: '-DHAVE_CONFIG_H=1',
     include_directories: configuration_inc,
     dependencies: [glib, gdk_pixbuf, libxml, m_dep, gobject, sqlite, plist, gmodule, zlib],
     version: abi_version,
