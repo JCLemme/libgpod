@@ -1,19 +1,33 @@
-import unittest
+import datetime
+import importlib
+import importlib.util
+import os
 import shutil
 import tempfile
-import os
-import datetime
+import sys
 import time
 import types
+import unittest
 
-gpod = __import__('__init__')
+resource_dir = os.environ["RESOURCE_DIR"]
+gpod_init = os.environ["GPOD_INIT"]
+
+# load gpod.py first
+gpod_gpod = importlib.import_module('gpod')
+sys.modules["gpod.gpod"] = gpod_gpod
+# then load the actual gpod module
+spec = importlib.util.spec_from_file_location("gpod", gpod_init)
+gpod = importlib.util.module_from_spec(spec)
+sys.modules["gpod"] = gpod
+spec.loader.exec_module(gpod)
+
 
 class TestiPodFunctions(unittest.TestCase):
     def setUp(self):
         self.mp = tempfile.mkdtemp()
         control_dir = os.path.join(self.mp, 'iPod_Control')
         music_dir = os.path.join(control_dir, 'Music')
-        shutil.copytree('resources',
+        shutil.copytree(resource_dir,
                         control_dir)
         os.mkdir(music_dir)
         for i in range(0, 20):
@@ -95,7 +109,7 @@ class TestPhotoDatabase(unittest.TestCase):
         self.mp = tempfile.mkdtemp()
         control_dir = os.path.join(self.mp, 'iPod_Control')
         photo_dir = os.path.join(control_dir, 'Photos')
-        shutil.copytree('resources',
+        shutil.copytree(resource_dir,
                         control_dir)
         os.mkdir(photo_dir)
         self.db = gpod.PhotoDatabase(self.mp)

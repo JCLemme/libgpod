@@ -34,5 +34,11 @@ if swig.found() and py3_inst.found()
         include_directories: configuration_inc,
         dependencies: [libgpod_dep, py3_inst.dependency(), glib, gdk_pixbuf, pygobject]
     )
-    install_data('__init__.py', 'ipod.py', 'gtkpod.py', install_dir: py_module)
+    init_py = files('__init__.py')[0]
+    install_data(init_py, 'ipod.py', 'gtkpod.py', install_dir: py_module)
+    gpod_py_dir = meson.current_build_dir()
+
+    if get_option('test')
+        subdir('tests')
+    endif
 endif
