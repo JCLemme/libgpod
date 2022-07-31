@@ -11,13 +11,13 @@ gpod = __import__('__init__')
 class TestiPodFunctions(unittest.TestCase):
     def setUp(self):
         self.mp = tempfile.mkdtemp()
-        control_dir = os.path.join(self.mp,'iPod_Control')
+        control_dir = os.path.join(self.mp, 'iPod_Control')
         music_dir = os.path.join(control_dir, 'Music')
         shutil.copytree('resources',
                         control_dir)
         os.mkdir(music_dir)
-        for i in range(0,20):
-            os.mkdir(os.path.join(music_dir,"f%02d" % i))
+        for i in range(0, 20):
+            os.mkdir(os.path.join(music_dir, "f%02d" % i))
         self.db = gpod.Database(self.mp)
 
     def tearDown(self):
@@ -30,9 +30,9 @@ class TestiPodFunctions(unittest.TestCase):
         [p for p in self.db.Playlists]
 
     def testCreatePlaylist(self):
-        self.assertEqual(len(self.db.Playlists),2)
-        pl = self.db.new_Playlist('my title')
-        self.assertEqual(len(self.db.Playlists),3)
+        self.assertEqual(len(self.db.Playlists), 2)
+        _ = self.db.new_Playlist('my title')
+        self.assertEqual(len(self.db.Playlists), 3)
 
     def testPopulatePlaylist(self):
         trackname = os.path.join(self.mp,
@@ -40,28 +40,28 @@ class TestiPodFunctions(unittest.TestCase):
                                  'tiny.mp3')
 
         pl = self.db.new_Playlist('my title')
-        self.assertEqual(len(pl),0)
+        self.assertEqual(len(pl), 0)
         t = self.db.new_Track(filename=trackname)
         pl.add(t)
-        self.assertEqual(len(pl),1)
+        self.assertEqual(len(pl), 1)
 
     def testAddTrack(self):
         trackname = os.path.join(self.mp,
                                  'iPod_Control',
                                  'tiny.mp3')
-        for n in range(1,5):
-            t = self.db.new_Track(filename=trackname)
-            self.assertEqual(len(self.db),n)
+        for n in range(1, 5):
+            _ = self.db.new_Track(filename=trackname)
+            self.assertEqual(len(self.db), n)
         self.db.copy_delayed_files()
         for track in self.db:
             self.failUnless(os.path.exists(track.ipod_filename()))
 
     def testAddRemoveTrack(self):
         self.testAddTrack()
-        for n in range(4,0,-1):
+        for n in range(4, 0, -1):
             track = self.db[0]
             track_file = track.ipod_filename()
-            self.assertEqual(len(self.db),n)
+            self.assertEqual(len(self.db), n)
             self.db.remove(track, ipod=True, quiet=True)
             self.failIf(os.path.exists(track_file))
 
@@ -89,16 +89,19 @@ class TestiPodFunctions(unittest.TestCase):
         self.assertEqual(type(gpod.version_info),
                          types.TupleType)
 
+
 class TestPhotoDatabase(unittest.TestCase):
     def setUp(self):
         self.mp = tempfile.mkdtemp()
-        control_dir = os.path.join(self.mp,'iPod_Control')
+        control_dir = os.path.join(self.mp, 'iPod_Control')
         photo_dir = os.path.join(control_dir, 'Photos')
         shutil.copytree('resources',
                         control_dir)
         os.mkdir(photo_dir)
         self.db = gpod.PhotoDatabase(self.mp)
-        gpod.itdb_device_set_sysinfo (self.db._itdb.device, "ModelNumStr", "MA450");
+        gpod.itdb_device_set_sysinfo(self.db._itdb.device,
+                                     "ModelNumStr",
+                                     "MA450")
 
     def tearDown(self):
         shutil.rmtree(self.mp)
@@ -110,7 +113,7 @@ class TestPhotoDatabase(unittest.TestCase):
         """ Test adding 5 photo albums to the database """
         for i in range(0, 5):
             count = len(self.db.PhotoAlbums)
-            album = self.db.new_PhotoAlbum(title="Test %s" % i)
+            _ = self.db.new_PhotoAlbum(title="Test %s" % i)
             self.failUnless(len(self.db.PhotoAlbums) == (count + 1))
 
     def testAddRemovePhotoAlbum(self):
@@ -145,8 +148,8 @@ class TestPhotoDatabase(unittest.TestCase):
                                  'iPod_Control',
                                  'tiny.png')
         self.failUnless(os.path.exists(photoname))
-        for n in range(1,5):
-            t = self.db.new_Photo(filename=photoname)
+        for n in range(1, 5):
+            _ = self.db.new_Photo(filename=photoname)
             self.assertEqual(len(self.db), n)
 
     def testAddPhotoToAlbum(self):
@@ -180,9 +183,6 @@ class TestPhotoDatabase(unittest.TestCase):
         self.testAddPhoto()
         self.failUnless(len(self.db) > count)
 
-    def testEnumeratePhotoAlbums(self):
-        [photo for photo in self.db.PhotoAlbums]
-
     def testEnumeratePhotos(self):
         for album in self.db.PhotoAlbums:
             [photo for photo in album]
@@ -191,6 +191,7 @@ class TestPhotoDatabase(unittest.TestCase):
         self.testAddPhoto()
         photo = self.db[0]
         self.failUnless('id' in photo)
+
 
 if __name__ == '__main__':
     unittest.main()
