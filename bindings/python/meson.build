@@ -2,7 +2,7 @@ swig = find_program('swig', required: get_option('python'))
 pygobject = dependency('pygobject-3.0', required: get_option('python'))
 
 py3_mod = import('python')
-py3_inst = py3_mod.find_installation('python3')
+py3_inst = py3_mod.find_installation('python3', modules: ['mutagen'])
 
 if swig.found() and py3_inst.found()
     py_module = get_option('prefix') + py3_inst.get_path('purelib') / meson.project_name()
