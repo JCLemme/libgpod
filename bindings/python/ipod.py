@@ -121,7 +121,7 @@ class Database:
         gtkpod.write(itdbext_file, self, self._itdb_file)
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
@@ -562,7 +562,7 @@ class _Playlists:
         return True
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
@@ -737,7 +737,7 @@ class Playlist:
             len(self))
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
@@ -808,7 +808,7 @@ class PhotoDatabase:
         return gpod.sw_get_list_len(self._itdb.photos)
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
@@ -864,7 +864,7 @@ class _PhotoAlbums:
         return True
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
@@ -932,7 +932,7 @@ class PhotoAlbum:
             self.album_type)
 
     def __getitem__(self, index):
-        if type(index) == types.SliceType:
+        if isinstance(index, slice):
             return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
