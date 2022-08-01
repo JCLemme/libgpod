@@ -28,7 +28,8 @@ def sha1_hash(filename):
     hash = sha1()
     size = os.path.getsize(filename)
     hash.update(struct.pack("<L", size))
-    hash.update(open(filename).read(hash_len))
+    with open(filename) as f:
+        hash.update(f.read(hash_len))
     return hash.hexdigest()
 
 
@@ -75,24 +76,25 @@ def parse(filename, db, itunesdb_file=None):
     ext_hash_valid = False
     ext_data = {}
 
-    for line in open(filename).readlines():
-        parts = line.strip().split("=", 1)
-        if len(parts) != 2:
-            print(parts)
-        name, value = parts
-        if name == "id":
-            if value == 'xxx':
-                break
-            id = int(value)
-            ext_data[id] = {}
-        elif name == "version":
-            pass
-        elif name == "itunesdb_hash":
-            if itunesdb_file and sha1_hash(itunesdb_file) == value:
-                ext_hash_valid = True
-        else:
-            # value is a string of undetermined encoding at the moment
-            ext_data[id][name] = value
+    with open(filename) as f:
+        for line in f.readlines():
+            parts = line.strip().split("=", 1)
+            if len(parts) != 2:
+                print(parts)
+            name, value = parts
+            if name == "id":
+                if value == 'xxx':
+                    break
+                id = int(value)
+                ext_data[id] = {}
+            elif name == "version":
+                pass
+            elif name == "itunesdb_hash":
+                if itunesdb_file and sha1_hash(itunesdb_file) == value:
+                    ext_hash_valid = True
+            else:
+                # value is a string of undetermined encoding at the moment
+                ext_data[id][name] = value
 
     # now add each extended info block to the track it goes with
     # equiv. of fill_in_extended_info()
