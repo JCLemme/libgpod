@@ -27,17 +27,21 @@ else:
 
 defaultencoding = locale.getpreferredencoding()
 
+
 class DatabaseException(RuntimeError):
     """Exception for database errors."""
     pass
+
 
 class TrackException(RuntimeError):
     """Exception for track errors."""
     pass
 
+
 class PhotoException(RuntimeError):
     """Exception for track errors."""
     pass
+
 
 class Database:
     """An iTunes database.
@@ -118,7 +122,7 @@ class Database:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
@@ -138,7 +142,7 @@ class Database:
         track.copy_to_ipod()
         gpod.itdb_playlist_add_track(gpod.itdb_playlist_mpl(self._itdb),
                                      track._track, -1)
-        track.__database = self # so the db doesn't get gc'd
+        track.__database = self  # so the db doesn't get gc'd
 
     def __del__(self):
         gpod.itdb_free(self._itdb)
@@ -152,7 +156,7 @@ class Database:
         """
 
         gpod.itdb_track_add(self._itdb, track._track, pos)
-        track.__database = self # so the db doesn't get gc'd
+        track.__database = self  # so the db doesn't get gc'd
 
     def remove(self, item, harddisk=False, ipod=True, quiet=False):
         """Remove a playlist or track from a database.
@@ -183,7 +187,7 @@ class Database:
             if harddisk:
                 try:
                     filename = item._userdata_into_default_locale('filename')
-                except KeyError as e:
+                except KeyError:
                     raise TrackException("Unable to remove %s from hard disk, no filename available." % item)
                 os.unlink(filename)
             if ipod:
@@ -198,34 +202,36 @@ class Database:
 
     def get_master(self):
         """Get the Master playlist."""
-        return Playlist(self,proxied_playlist=gpod.itdb_playlist_mpl(self._itdb))
+        return Playlist(self,
+                        proxied_playlist=gpod.itdb_playlist_mpl(self._itdb))
 
     def get_podcasts(self):
         """Get the podcasts playlist."""
-        return Playlist(self,proxied_playlist=gpod.itdb_playlist_podcasts(self._itdb))
+        return Playlist(self,
+                        proxied_playlist=gpod.itdb_playlist_podcasts(self._itdb))
 
     def get_playlists(self):
         """Get all playlists."""
         return _Playlists(self)
 
-    Master   = property(get_master)
+    Master = property(get_master)
     Podcasts = property(get_podcasts)
-    Playlists= property(get_playlists)
+    Playlists = property(get_playlists)
 
     def smart_update(self):
         """Update all smart playlists."""
         gpod.itdb_spl_update_all(self._itdb)
 
-    def new_Playlist(self,*args,**kwargs):
+    def new_Playlist(self, *args, **kwargs):
         """Create a new Playlist.
 
         See Playlist.__init__() for details.
 
         """
 
-        return Playlist(self, *args,**kwargs)
+        return Playlist(self, *args, **kwargs)
 
-    def new_Track(self,**kwargs):
+    def new_Track(self, **kwargs):
         """Create a new Track.
 
         See Track.__init__() for details.
@@ -234,14 +240,14 @@ class Database:
 
         track = Track(**kwargs)
         self.add(track)
-        if kwargs.has_key('podcast') and kwargs['podcast'] == True:
+        if kwargs.get('podcast', False):
             self.Podcasts.add(track)
         else:
             self.Master.add(track)
-        track.__database = self # so the db doesn't get gc'd
+        track.__database = self  # so the db doesn't get gc'd
         return track
 
-    def copy_delayed_files(self,callback=False):
+    def copy_delayed_files(self, callback=False):
         """Copy files not marked as transferred to the iPod.
 
         callback is an optional function that will be called for each
@@ -258,7 +264,7 @@ class Database:
         if not gpod.itdb_get_mountpoint(self._itdb):
             # we're not working with a real ipod.
             return
-        to_copy=[]
+        to_copy = []
         for track in self:
             try:
                 transferred = int(track['userdata']['transferred'])
@@ -270,9 +276,10 @@ class Database:
         total = len(to_copy)
         for track in to_copy:
             if callback:
-                i=i+1
-                callback(self,track, i, total)
+                i = i+1
+                callback(self, track, i, total)
             track.copy_to_ipod()
+
 
 class Track:
     """A track in an iTunes database.
@@ -292,9 +299,9 @@ class Track:
     # by the itdb.
 
     _proxied_attributes = [k for k in gpod._Itdb_Track.__dict__.keys()
-                            if not (k.startswith("_") or
-                                    k.startswith("reserved") or
-                                    k == "chapterdata")]
+                           if not (k.startswith("_") or
+                                   k.startswith("reserved") or
+                                   k == "chapterdata")]
 
     def __init__(self, filename=None, mediatype=gpod.ITDB_MEDIATYPE_AUDIO,
                  proxied_track=None, podcast=False, ownerdb=None):
@@ -320,33 +327,33 @@ class Track:
             self._track = gpod.itdb_track_new()
             self['userdata'] = {'transferred': 0,
                                 'hostname': socket.gethostname(),
-                                'charset':defaultencoding}
+                                'charset': defaultencoding}
             self['userdata']['pc_mtime'] = os.stat(filename).st_mtime
-            self._set_userdata_utf8('filename',filename)
-            possible_image = os.path.join(os.path.split(filename)[0],'folder.jpg')
+            self._set_userdata_utf8('filename', filename)
+            possible_image = os.path.join(os.path.split(filename)[0], 'folder.jpg')
             if os.path.exists(possible_image):
                 self.set_coverart_from_file(possible_image)
             try:
                 audiofile = MP3(self._userdata_into_default_locale('filename'))
             except Exception as e:
                 raise TrackException(str(e))
-            for tag, attrib in (('TPE1','artist'),
-                                ('TIT2','title'),
-                                ('TBPM','BPM'),
-                                ('TCON','genre'),
-                                ('TALB','album'),
-                                ('TPOS',('cd_nr','cds')),
-                                ('TRCK',('track_nr','tracks'))):
+            for tag, attrib in (('TPE1', 'artist'),
+                                ('TIT2', 'title'),
+                                ('TBPM', 'BPM'),
+                                ('TCON', 'genre'),
+                                ('TALB', 'album'),
+                                ('TPOS', ('cd_nr', 'cds')),
+                                ('TRCK', ('track_nr', 'tracks'))):
                 try:
                     value = audiofile[tag]
-                    if isinstance(value,mutagen.id3.NumericPartTextFrame):
-                        parts = map(int,value.text[0].split("/"))
+                    if isinstance(value, mutagen.id3.NumericPartTextFrame):
+                        parts = map(int, value.text[0].split("/"))
                         if len(parts) == 2:
                             self[attrib[0]], self[attrib[1]] = parts
                         elif len(parts) == 1:
                             self[attrib[0]] = parts[0]
-                    elif isinstance(value,mutagen.id3.TextFrame):
-                        self[attrib] = value.text[0].encode('UTF-8','replace')
+                    elif isinstance(value, mutagen.id3.TextFrame):
+                        self[attrib] = value.text[0].encode('UTF-8', 'replace')
                 except KeyError:
                     pass
             if self['title'] is None:
@@ -357,18 +364,18 @@ class Track:
             self.set_podcast(podcast)
         elif proxied_track:
             self._track = proxied_track
-            self.__database = ownerdb # so the db doesn't get gc'd
+            self.__database = ownerdb  # so the db doesn't get gc'd
         else:
             self._track = gpod.itdb_track_new()
             self.set_podcast(podcast)
-        if not 'mediatype' in self:
+        if 'mediatype' not in self:
             self['mediatype'] = mediatype
 
     def _set_userdata_utf8(self, key, value):
         self['userdata']['%s_locale' % key] = value
         try:
-            self['userdata']['%s_utf8'   % key] = value.decode(self['userdata']['charset']).encode('UTF-8')
-        except UnicodeDecodeError as e:
+            self['userdata']['%s_utf8' % key] = value.decode(self['userdata']['charset']).encode('UTF-8')
+        except UnicodeDecodeError:
             # string clearly isn't advertised charset.  I prefer to
             # not add the _utf8 version as we can't actually generate
             # it. Maybe we'll have to populate a close-fit though.
@@ -382,10 +389,10 @@ class Track:
             return self['userdata']['%s_locale' % key]
         # our filesystem is in a different encoding to the filename, so
         # try to convert it. The UTF-8 version is likely best to try first?
-        if self['userdata'].has_key('%s_utf8' % key):
-            unicode_value = self['userdata']['%s_utf8' % key].decode('UTF-8')
+        if f'{key}_utf8' in self['userdata']:
+            unicode_value = self['userdata'][f'{key}_utf8'].decode('UTF-8')
         else:
-            unicode_value = self['userdata']['%s_locale' % key].decode(self['userdata']['charset'])
+            unicode_value = self['userdata'][f'{key}_locale'].decode(self['userdata']['charset'])
         return unicode_value.encode(defaultencoding)
 
     def set_coverart_from_file(self, filename):
@@ -393,7 +400,7 @@ class Track:
         self._set_userdata_utf8('thumbnail', filename)
 
     def set_coverart(self, pixbuf):
-        if pixbuf == None:
+        if pixbuf is None:
             gpod.itdb_track_remove_thumbnails(self._track)
         elif isinstance(pixbuf, Photo):
             raise NotImplemented("Can't set coverart from existing coverart yet")
@@ -447,12 +454,12 @@ class Track:
         if value:
             self['skip_when_shuffling'] = 0x01
             self['remember_playback_position'] = 0x01
-            self['flag4'] = 0x01 # Show Title/Album on the 'Now Playing' page
+            self['flag4'] = 0x01  # Show Title/Album on the 'Now Playing' page
             self['mediatype'] = gpod.ITDB_MEDIATYPE_PODCAST
         else:
             self['skip_when_shuffling'] = 0x00
             self['remember_playback_position'] = 0x00
-            self['flag4'] = 0x00 # Show Title/Album/Artist on the 'Now Playing' page
+            self['flag4'] = 0x00  # Show Title/Album/Artist on the 'Now Playing' page
 
     def __str__(self):
         return self.__repr__()
@@ -468,14 +475,7 @@ class Track:
             yield k
 
     def has_key(self, key):
-        try:
-            value = self[key]
-        except KeyError:
-            return False
-        return True
-
-    def __contains__(self, key):
-        return self.has_key(key)
+        return key in self
 
     def iteritems(self):
         for k in self:
@@ -513,41 +513,43 @@ class Track:
             gpod.sw_set_track_userdata(self._track, value)
             return
         if type(value) == types.UnicodeType:
-            value = value.encode('UTF-8','replace')
+            value = value.encode('UTF-8', 'replace')
         if item in self._proxied_attributes:
             return setattr(self._track, item, value)
         else:
             raise KeyError('No such key: %s' % item)
 
+
 playlist_sorting = {
-    1:'playlist',
-    2:'unknown2',
-    3:'songtitle',
-    4:'album',
-    5:'artist',
-    6:'bitrate',
-    7:'genre',
-    8:'kind',
-    9:'modified',
-    10:'track',
-    11:'size',
-    12:'time',
-    13:'year',
-    14:'rate',
-    15:'comment',
-    16:'added',
-    17:'equalizer',
-    18:'composer',
-    19:'unknown19',
-    20:'count',
-    21:'last',
-    22:'disc',
-    23:'rating',
-    24:'release',
-    25:'BPM',
-    26:'grouping',
-    27:'category',
-    28:'description'}
+    1: 'playlist',
+    2: 'unknown2',
+    3: 'songtitle',
+    4: 'album',
+    5: 'artist',
+    6: 'bitrate',
+    7: 'genre',
+    8: 'kind',
+    9: 'modified',
+    10: 'track',
+    11: 'size',
+    12: 'time',
+    13: 'year',
+    14: 'rate',
+    15: 'comment',
+    16: 'added',
+    17: 'equalizer',
+    18: 'composer',
+    19: 'unknown19',
+    20: 'count',
+    21: 'last',
+    22: 'disc',
+    23: 'rating',
+    24: 'release',
+    25: 'BPM',
+    26: 'grouping',
+    27: 'category',
+    28: 'description'}
+
 
 class _Playlists:
     def __init__(self, db):
@@ -561,7 +563,7 @@ class _Playlists:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
@@ -602,12 +604,13 @@ class _Playlists:
                 return [self.__call__(number=i) for i in number]
             else:
                 pl = gpod.itdb_playlist_by_nr(self._db._itdb,
-                                                number)
+                                              number)
                 if pl:
                     return Playlist(self._db,
                                     proxied_playlist=pl)
                 else:
                     raise KeyError("Playlist with number %s not found." % repr(number))
+
 
 class Playlist:
     """A playlist in an iTunes database."""
@@ -714,12 +717,12 @@ class Playlist:
                 return
         return ValueError("Unknown playlist sorting '%s'" % order)
 
-    name   = property(get_name, set_name)
-    id     = property(get_id)
-    smart  = property(get_smart)
+    name = property(get_name, set_name)
+    id = property(get_id)
+    smart = property(get_smart)
     master = property(get_master)
-    podcast= property(get_podcast)
-    order  = property(get_sort, set_sort)
+    podcast = property(get_podcast)
+    order = property(get_sort, set_sort)
 
     def __str__(self):
         return self.__repr__()
@@ -735,7 +738,7 @@ class Playlist:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
@@ -743,7 +746,7 @@ class Playlist:
                          ownerdb=self)
 
     def __len__(self):
-        #return self._pl.num # Always 0 ?
+        # return self._pl.num # Always 0 ?
         return gpod.sw_get_list_len(self._pl.members)
 
     def __nonzero__(self):
@@ -779,12 +782,13 @@ class Playlist:
         else:
             raise DatabaseException("Playlist %s does not contain %s" % (self, track))
 
+
 class PhotoDatabase:
     """An iTunes Photo database"""
     def __init__(self, mountpoint="/mnt/ipod"):
         """Create a Photo database object"""
         self._itdb = gpod.itdb_photodb_parse(mountpoint, None)
-        if self._itdb == None:
+        if self._itdb is None:
             self._itdb = gpod.itdb_photodb_create(mountpoint)
 
     def __str__(self):
@@ -805,20 +809,20 @@ class PhotoDatabase:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
             return Photo(proxied_photo=gpod.sw_get_photo(self._itdb.photos, index),
                          ownerdb=self)
 
-    def new_PhotoAlbum(self,**kwargs):
+    def new_PhotoAlbum(self, **kwargs):
         """Create a new PhotoAlbum.
         """
         album = PhotoAlbum(self, **kwargs)
         return album
 
-    def new_Photo(self,**kwargs):
+    def new_Photo(self, **kwargs):
         """Create a new Photo.
         """
         kwargs['ownerdb'] = self
@@ -846,7 +850,8 @@ class PhotoDatabase:
         return _PhotoAlbums(self)
 
     PhotoAlbums = property(get_photoalbums)
-    device      = property(get_device)
+    device = property(get_device)
+
 
 class _PhotoAlbums:
     def __init__(self, db):
@@ -860,7 +865,7 @@ class _PhotoAlbums:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
@@ -914,7 +919,7 @@ class PhotoAlbum:
     def get_album_type(self):
         return self._pa.album_type
 
-    name       = property(get_name, set_name)
+    name = property(get_name, set_name)
     album_type = property(get_album_type)
 
     def __str__(self):
@@ -928,7 +933,7 @@ class PhotoAlbum:
 
     def __getitem__(self, index):
         if type(index) == types.SliceType:
-            return [self[i] for i in xrange(*index.indices(len(self)))]
+            return [self[i] for i in range(*index.indices(len(self)))]
         else:
             if index < 0:
                 index += len(self)
@@ -941,11 +946,12 @@ class PhotoAlbum:
     def __nonzero__(self):
         return True
 
+
 class Photo:
     """A photo in an iTunes Photo database."""
 
     _proxied_attributes = [k for k in gpod._Itdb_Artwork.__dict__.keys()
-                            if not (k.startswith("_") or k.startswith("reserved"))]
+                           if not (k.startswith("_") or k.startswith("reserved"))]
 
     def __init__(self, filename=None,
                  proxied_photo=None, ownerdb=None):
@@ -976,14 +982,7 @@ class Photo:
             yield k
 
     def has_key(self, key):
-        try:
-            value = self[key]
-        except KeyError:
-            return False
-        return True
-
-    def __contains__(self, key):
-        return self.has_key(key)
+        return key in self
 
     def iteritems(self):
         for k in self:
@@ -1020,7 +1019,7 @@ class Photo:
 
     def __setitem__(self, item, value):
         if type(value) == types.UnicodeType:
-            value = value.encode('UTF-8','replace')
+            value = value.encode('UTF-8', 'replace')
         if item in self._proxied_attributes:
             return setattr(self._photo, item, value)
         else:
@@ -1037,7 +1036,7 @@ class Photo:
             possible size and 0 for the smallest possible size (with no scaling)
             """
             device = self._database.device
-            if hasattr(self._database,"_itdb"):
+            if hasattr(self._database, "_itdb"):
                 device = self._database._itdb.device
             return gpod.itdb_artwork_get_pixbuf(device, self._photo,
                                                 width, height)
