@@ -30,7 +30,7 @@ class TestiPodFunctions(unittest.TestCase):
         shutil.copytree(resource_dir,
                         control_dir)
         os.mkdir(music_dir)
-        for i in range(0, 20):
+        for i in range(20):
             os.mkdir(os.path.join(music_dir, "f%02d" % i))
         self.db = gpod.Database(self.mp)
 
@@ -41,7 +41,8 @@ class TestiPodFunctions(unittest.TestCase):
         self.db.close()
 
     def testListPlaylists(self):
-        [p for p in self.db.Playlists]
+        playlists = set([p.name for p in self.db.Playlists])
+        self.assertSetEqual({'Nicks iPod', 'Podcasts'}, playlists)
 
     def testCreatePlaylist(self):
         self.assertEqual(len(self.db.Playlists), 2)
