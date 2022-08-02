@@ -28,7 +28,7 @@ def sha1_hash(filename):
     hash = sha1()
     size = os.path.getsize(filename)
     hash.update(struct.pack("<L", size))
-    with open(filename) as f:
+    with open(filename, 'rb') as f:
         hash.update(f.read(hash_len))
     return hash.hexdigest()
 
