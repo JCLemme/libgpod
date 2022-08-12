@@ -75,7 +75,10 @@ if udev.found()
         dependencies: [tool_deps, libxml, ipod_lockdown[2]])
 
     dir_udev_rules    = dir_udev / 'rules.d'
-    install_data('90-libgpod.rules', install_dir : dir_udev_rules)
+    libgpod_rules = configure_file(input: '90-libgpod.rules.in',
+        output: '90-libgpod.rules',
+        configuration: {'udevdir': dir_udev})
+    install_data(libgpod_rules, install_dir : dir_udev_rules)
 endif
 
 time_sync_files = files(
