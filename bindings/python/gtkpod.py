@@ -46,7 +46,7 @@ def write(filename, db, itunesdb_file):
     file = open(filename, "w")
 
     def write_pair(name, value):
-        if type(value) not in (types.StringType, types.UnicodeType):
+        if not isinstance(value, str):
             # e.g., an integer
             value = str(value)
         file.write("=".join([name, value]))

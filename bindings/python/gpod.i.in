@@ -90,6 +90,7 @@ void hash_table_to_pydict(gpointer key, gpointer value, gpointer user_data);
   #define PyInt_CheckExact PyLong_CheckExact
   #define PyInt_AsUnsignedLongMask PyLong_AsUnsignedLongMask
   #define PyInt_AsUnsignedLongLongMask PyLong_AsUnsignedLongLongMask
+  #define SWIG_PYTHON_STRICT_BYTE_CHAR 1
 #else
   void SWIG_init(void);
 #endif

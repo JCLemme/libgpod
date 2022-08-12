@@ -3,11 +3,13 @@ import importlib
 import importlib.util
 import os
 import shutil
-import tempfile
 import sys
+import tempfile
 import time
 import types
 import unittest
+
+from pathlib import PurePath
 
 resource_dir = os.environ["RESOURCE_DIR"]
 gpod_init = os.environ["GPOD_INIT"]
@@ -71,6 +73,18 @@ class TestiPodFunctions(unittest.TestCase):
         for track in self.db:
             self.assertTrue(os.path.exists(track.ipod_filename()))
 
+    def testAddUTF8Track(self):
+        basename = PurePath(self.mp, 'iPod_Control')
+        # grinning face
+        utf8_name = basename / ("\U0001f600" + ".mp3")
+        shutil.copy(basename / 'tiny.mp3', utf8_name)
+        for n in range(1, 5):
+            _ = self.db.new_Track(filename=utf8_name)
+            self.assertEqual(len(self.db), n)
+        self.db.copy_delayed_files()
+        for track in self.db:
+            self.assertTrue(os.path.exists(track.ipod_filename()))
+
     def testAddRemoveTrack(self):
         self.testAddTrack()
         for n in range(4, 0, -1):
@@ -101,8 +115,7 @@ class TestiPodFunctions(unittest.TestCase):
         self.assertTrue('title' in track)
 
     def testVersion(self):
-        self.assertEqual(type(gpod.version_info),
-                         types.TupleType)
+        self.assertTrue(isinstance(gpod.version_info, list))
 
 
 class TestPhotoDatabase(unittest.TestCase):
@@ -115,8 +128,8 @@ class TestPhotoDatabase(unittest.TestCase):
         os.mkdir(photo_dir)
         self.db = gpod.PhotoDatabase(self.mp)
         gpod.itdb_device_set_sysinfo(self.db._itdb.device,
-                                     "ModelNumStr",
-                                     "MA450")
+                                     b"ModelNumStr",
+                                     b"MA450")
 
     def tearDown(self):
         shutil.rmtree(self.mp)
@@ -152,8 +165,8 @@ class TestPhotoDatabase(unittest.TestCase):
 
         pas = [x for x in self.db.PhotoAlbums if x.name != "Photo Library"]
         for pa in pas:
-            self.assertTrue(pa.name in bad)
-            self.assertTrue(pa.name not in good)
+            self.assertTrue(pa.name not in bad)
+            self.assertTrue(pa.name in good)
 
     def testEnumeratePhotoAlbums(self):
         [photo for photo in self.db.PhotoAlbums]
