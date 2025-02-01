@@ -92,7 +92,7 @@ class TestiPodFunctions(unittest.TestCase):
             track_file = track.ipod_filename()
             self.assertEqual(len(self.db), n)
             self.db.remove(track, ipod=True, quiet=True)
-            self.failIf(os.path.exists(track_file))
+            self.assertFalse(os.path.exists(track_file))
 
     def testDatestampSetting(self):
         trackname = os.path.join(self.mp,

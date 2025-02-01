@@ -12,10 +12,23 @@ stored on an iPod, to modify them and to save them back to the iPod.
 
 ## Building
 
-The library is now build with Meson.
+The library is now built with Meson.
 
+If you want to install the gpod bindings into a venv:
 ```
-meson build; cd build
+python3 -m venv .venv
+source .venv/bin/activate
+pip install mutagen
+meson build --python.install-env venv
+cd build
+ninja
+ninja install
+```
+
+Otherwise gpod will be installed to the system's `site-packages`:
+```
+meson build
+cd build
 ninja
 # as root or set a prefix via `meson configure`
 ninja install
@@ -23,7 +36,8 @@ ninja install
 
 If you want to test the Python code:
 ```
-meson build; cd build
+meson build
+cd build
 meson test python-test -v
 ```
 
