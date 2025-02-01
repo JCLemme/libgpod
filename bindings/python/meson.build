@@ -5,7 +5,8 @@ py3_mod = import('python')
 py3_inst = py3_mod.find_installation('python3', modules: ['mutagen'])
 
 if swig.found() and py3_inst.found()
-    py_module = get_option('prefix') + py3_inst.get_path('purelib') / meson.project_name()
+  #py_module = get_option('prefix') + py3_inst.get_path('purelib') / meson.project_name()
+    py_module = py3_inst.get_path('purelib') / meson.project_name()
 
     python_conf_data = {'PACKAGE_VERSION': meson.project_version(),
                         'CONFIG_H': meson.build_root() / '@0@'.format(config_h),

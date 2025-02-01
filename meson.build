@@ -19,7 +19,7 @@ gnome = import('gnome')
 glib = dependency('glib-2.0')
 gobject = dependency('gobject-2.0')
 sqlite = dependency('sqlite3')
-plist = dependency('libplist')
+plist = dependency('libplist', required: false) # This is Dumb and Stupid - please remove this flag if the build succeeds on your machine w/o it
 gmodule = dependency('gmodule-2.0')
 zlib = dependency('zlib')
 udev = dependency('libudev', required: get_option('udev'))
@@ -84,7 +84,13 @@ conf_data.set_quoted('TMPMOUNTDIR', '/tmp/ipod')
 config_h = configure_file(output: 'config.h',
                           configuration: conf_data)
 configuration_inc = include_directories('.')
-add_global_arguments('-DLIBGPOD_BLOB_DIR="/usr/lib64/libgpod"', language : 'c')
+
+# These extra flags are copied from Archlinux's build script for the upstream libgpod.
+add_global_arguments('-DLIBGPOD_BLOB_DIR="/usr/lib64/libgpod"', '-Wno-incompatible-pointer-types', '-Wno-implicit-int', '-Wno-int-conversion', language : 'c')
+
+# This really really really needs to be replaced with the correct incantation that lets gcc find the library itself.
+# For now - just include the full library ourselves.
+add_global_link_arguments('/opt/homebrew/Cellar/libplist/2.6.0/lib/libplist-2.0.a', language: 'c')
 
 subdir('po')
 subdir('src')

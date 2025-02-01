@@ -337,6 +337,18 @@ class Track:
                 audiofile = MP3(self['userdata']['filename'])
             except Exception as e:
                 raise TrackException(str(e))
+
+            # Attempt to copy album art from the ID3 tags.
+            try:
+                img_embed = audiofile.get('APIC:Cover')
+                img_filename = f"/tmp/{audiofile.get('TSRC')}.jpg"
+                with open(img_filename, "wb") as ifile:
+                    ifile.write(img_embed.data)
+                self.set_coverart_from_file(img_filename)
+                #gpod.itdb_track_set_thumbnails_from_data(self._track, bytearray(img_embed.data), len(img_embed.data))
+            except Exception as e:
+                raise e
+
             for tag, attrib in (('TPE1', 'artist'),
                                 ('TIT2', 'title'),
                                 ('TBPM', 'BPM'),
@@ -347,7 +359,7 @@ class Track:
                 try:
                     value = audiofile[tag]
                     if isinstance(value, mutagen.id3.NumericPartTextFrame):
-                        parts = map(int, value.text[0].split("/"))
+                        parts = list(map(int, value.text[0].split("/")))
                         if len(parts) == 2:
                             self[attrib[0]], self[attrib[1]] = parts
                         elif len(parts) == 1:
