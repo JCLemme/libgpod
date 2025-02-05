@@ -28,11 +28,9 @@ else:
 
 defaultencoding = locale.getpreferredencoding()
 
-
 class DatabaseException(RuntimeError):
     """Exception for database errors."""
     pass
-
 
 class TrackException(RuntimeError):
     """Exception for track errors."""
@@ -86,6 +84,7 @@ class Database:
                 raise DatabaseException("Unable to parse iTunes database at mount point %s" % mountpoint)
             else:
                 self._itdb.mountpoint = mountpoint
+
             self._itdb_file = gpod.itdb_get_itunesdb_path(
                                 gpod.itdb_get_mountpoint(self._itdb)
                               )
@@ -139,7 +138,7 @@ class Database:
         filename is added to the end of the master playlist.
 
         """
-        track = Track(filename)
+        track = Track(filename=filename)
         track.copy_to_ipod()
         gpod.itdb_playlist_add_track(gpod.itdb_playlist_mpl(self._itdb),
                                      track._track, -1)
@@ -208,7 +207,12 @@ class Database:
 
     def get_podcasts(self):
         """Get the podcasts playlist."""
+        # There is a slim chance that passing the "podcast" flag here will work as 
+        # we expect, i.e. creating the MPPL if missing and using it otherwise.
+        # (Still gonna make one explicitly tho)
         return Playlist(self,
+                        title="Podcasts",
+                        podcast=True,
                         proxied_playlist=gpod.itdb_playlist_podcasts(self._itdb))
 
     def get_playlists(self):
@@ -241,7 +245,7 @@ class Database:
 
         track = Track(**kwargs)
         self.add(track)
-        if kwargs.get('podcast', False):
+        if kwargs.get('podcast', True):  # ...why was this false?
             self.Podcasts.add(track)
         else:
             self.Master.add(track)
@@ -281,6 +285,13 @@ class Database:
                 callback(self, track, i, total)
             track.copy_to_ipod()
 
+
+# TODO: fix the function that lets us set cover art without writing to disk first
+art_name_bad_replace = 1
+
+def db_to_soundcheck(decibel: float):
+    """Converts a gain in decibels to a Sound Check offset."""
+    return int(1000 * 10 ** (-0.1 * decibel))
 
 class Track:
     """A track in an iTunes database.
@@ -323,6 +334,8 @@ class Track:
         unless proxied_track is set.
         """
 
+        global art_name_bad_replace
+
         if filename:
             self._track = gpod.itdb_track_new()
             self['userdata'] = {'transferred': 0,
@@ -330,30 +343,65 @@ class Track:
                                 'charset': defaultencoding}
             self['userdata']['pc_mtime'] = os.stat(filename).st_mtime
             self['userdata']['filename'] = str(filename)
+
+            # Optional: set cover art
             possible_image = os.path.join(os.path.split(filename)[0], 'folder.jpg')
             if os.path.exists(possible_image):
                 self.set_coverart_from_file(possible_image)
+
             try:
                 audiofile = MP3(self['userdata']['filename'])
             except Exception as e:
                 raise TrackException(str(e))
 
-            # Attempt to copy album art from the ID3 tags.
-            try:
-                img_embed = audiofile.get('APIC:Cover')
-                img_filename = f"/tmp/{audiofile.get('TSRC')}.jpg"
-                with open(img_filename, "wb") as ifile:
-                    ifile.write(img_embed.data)
-                self.set_coverart_from_file(img_filename)
-                #gpod.itdb_track_set_thumbnails_from_data(self._track, bytearray(img_embed.data), len(img_embed.data))
-            except Exception as e:
-                raise e
+            img_embed = None
 
+            for test in ["APIC:", "APIC:Cover"]:  # I've seen both
+                try:
+                    img_embed = audiofile.get(test)
+                    break
+                except Exception:
+                    pass
+
+            if img_embed is not None:
+                try:
+                    img_filename = f"/tmp/aart_{art_name_bad_replace}.jpg"
+                    art_name_bad_replace += 1
+                    with open(img_filename, "wb") as ifile:
+                        ifile.write(img_embed.data)
+                    self.set_coverart_from_file(img_filename)
+                    # gpod.itdb_track_set_thumbnails_from_data(self._track, bytearray(img_embed.data), len(img_embed.data))
+                except Exception as e:
+                    print("WARN: skipping album art for this track")
+                    # raise e
+
+            # Optional: set soundcheck
+            try:
+                gain_db = float(audiofile["TXXX:REPLAYGAIN_TRACK_GAIN"].text[0].split()[0])
+                self["soundcheck"] = db_to_soundcheck(gain_db)
+            except Exception:
+                pass
+
+            # Optional: set year
+            try:
+                if "TXXX:originalyear" in audiofile:
+                    self["year"] = int(audiofile["TXXX:originalyear"])
+                elif "TDRC" in audiofile:
+                    self["year"] = int(audiofile["TDRC"][:4])
+            except Exception:
+                pass
+
+            # Set simple tags (i.e. things we can copy 1:1 from ID3)
             for tag, attrib in (('TPE1', 'artist'),
                                 ('TIT2', 'title'),
                                 ('TBPM', 'BPM'),
                                 ('TCON', 'genre'),
                                 ('TALB', 'album'),
+                                ('COMM', 'comment'),
+                                ('TCON', 'genre'),
+                                ('TSRC', 'keywords'),  # Note: for identification with spotdl/musicbrainz
+                                ('TSOP', 'sort_artist'),
+                                ('TSO2', 'sort_albumartist'),
                                 ('TPOS', ('cd_nr', 'cds')),
                                 ('TRCK', ('track_nr', 'tracks'))):
                 try:
@@ -368,12 +416,17 @@ class Track:
                         self[attrib] = str(value)
                 except KeyError:
                     pass
+
+            # Post-process some tags
             if self['title'] is None:
                 self['title'] = os.path.splitext(
                     os.path.split(filename)[1])[0].decode(
                     defaultencoding).encode('UTF-8')
+
             self['tracklen'] = int(audiofile.info.length * 1000)
+
             self.set_podcast(podcast)
+
         elif proxied_track:
             self._track = proxied_track
             self.__database = ownerdb  # so the db doesn't get gc'd
@@ -384,14 +437,14 @@ class Track:
             self['mediatype'] = mediatype
 
     def set_coverart_from_file(self, filename):
-        gpod.itdb_track_set_thumbnails(self._track, filename)
+        gpod.itdb_track_set_thumbnails(self._track, filename.encode('UTF-8'))
         self['userdata']['thumbnail'] = filename
 
     def set_coverart(self, pixbuf):
         if pixbuf is None:
             gpod.itdb_track_remove_thumbnails(self._track)
         elif isinstance(pixbuf, Photo):
-            raise NotImplemented("Can't set coverart from existing coverart yet")
+            raise NotImplementedError("Can't set coverart from existing coverart yet")
         else:
             gpod.itdb_track_set_thumbnails_from_pixbuf(self._track,
                                                        pixbuf)
@@ -607,7 +660,7 @@ class Playlist:
     """A playlist in an iTunes database."""
 
     def __init__(self, parent_db, title="New Playlist",
-                 smart=False, pos=-1, proxied_playlist=None):
+                 smart=False, pos=-1, podcast=False, proxied_playlist=None):
         """Create a playlist object.
 
         parent_db is the database object to which the playlist
@@ -619,6 +672,9 @@ class Playlist:
 
         If pos is set the track will be inserted at that position.  By
         default the playlist will be added at the end of the database.
+
+        If podcast is set this playlist will become the master podcast
+        playlist. Prolly don't run this twice.
 
         If proxied_playlist is set it is expected to be an
         Itdb_Playlist object (as returned by gpod.sw_get_playlist() or
@@ -635,6 +691,8 @@ class Playlist:
             else:
                 smart = 0
             self._pl = gpod.itdb_playlist_new(title.encode('UTF-8'), smart)
+            if podcast:
+                gpod.itdb_playlist_set_podcasts(self._pl)
             gpod.itdb_playlist_add(self._db._itdb, self._pl, pos)
 
     def smart_update(self):
@@ -1043,3 +1101,33 @@ class Photo:
                 device = self._database._itdb.device
             return gpod.itdb_artwork_get_pixbuf(device, self._photo,
                                                 width, height)
+
+
+
+
+"""Initializes a blank iPod. 
+
+Creates the iTunesDB, ArtworkDB, and Photo Library (as appropriate).
+Also creates blank master playlists for songs and podcasts.
+
+`model` should be five letters or numbers, starting with 'M'. Should be
+replaced with an autoguesser, or at least a name lookup.
+
+`name` I believe is used in iTunes. Set it or don't.
+
+Returns the newly created Database.
+
+"""
+def init_ipod(mountpoint, model, name="iPod"):
+    # Do like 99% of the work.
+    gpod.itdb_init_ipod(mountpoint.encode('UTF-8'), model.encode('UTF-8'), name.encode('UTF-8'), None)
+
+    # Open the fresh database.
+    db = Database(mountpoint)
+
+    # Create a podcast master playlist - otherwise none will show up in the list.
+    db.new_Playlist(title="Podcasts", podcast=True)
+
+    # All good? Hopefully. Close and reopen to write the changes.
+    db.close()
+    return Database(mountpoint)
