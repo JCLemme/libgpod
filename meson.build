@@ -1,6 +1,7 @@
 project('gpod', 'c',
-  version : '0.8.3',
-  default_options : ['warning_level=3',
+  version : '0.8.4',
+  meson_version : '>=1.4.0',
+  default_options : ['warning_level=1', # was 3
                      'c_std=c11',
                      'buildtype=debugoptimized'])
 

@@ -19,7 +19,7 @@ If you want to install the gpod bindings into a venv:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install mutagen
-meson build --python.install-env venv
+meson setup build --python.install-env venv
 cd build
 ninja
 ninja install
@@ -27,7 +27,7 @@ ninja install
 
 Otherwise gpod will be installed to the system's `site-packages`:
 ```
-meson build
+meson setup build
 cd build
 ninja
 # as root or set a prefix via `meson configure`
@@ -36,7 +36,7 @@ ninja install
 
 If you want to test the Python code:
 ```
-meson build
+meson setup build
 cd build
 meson test python-test -v
 ```

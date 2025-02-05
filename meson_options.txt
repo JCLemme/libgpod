@@ -4,7 +4,7 @@ option('doc',
        description: 'Generate html documentation (requires gtk-doc).')
 option('test',
        type: 'boolean',
-       value: 'true',
+       value: true,
        description: 'Build tests.')
 option('taglib',
        type: 'feature',

@@ -9,7 +9,7 @@ if swig.found() and py3_inst.found()
     py_module = py3_inst.get_path('purelib') / meson.project_name()
 
     python_conf_data = {'PACKAGE_VERSION': meson.project_version(),
-                        'CONFIG_H': meson.build_root() / '@0@'.format(config_h),
+                        'CONFIG_H': '@0@'.format(config_h.full_path()),
                         'ITDB_H': lib_src_dir / 'itdb.h'}
     gpod_i = configure_file(input: 'gpod.i.in',
         output: 'gpod.i',

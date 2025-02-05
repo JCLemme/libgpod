@@ -5,7 +5,7 @@ if gtkdoc.found()
   doc_conf_data.set('PACKAGE_VERSION', meson.project_version())
   version_xml = configure_file(input: 'version.xml.in',
                                output: 'version.xml',
-                               configuration: conf_data)
+                               configuration: doc_conf_data)
   config_inc = include_directories('.')
 
   gnome.gtkdoc('libgpod',

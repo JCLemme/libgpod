@@ -18,7 +18,7 @@ endif
 
 if taglib.found()
   # we need C++ for this test cases
-  if add_languages('cpp', required: get_option('taglib'))
+  if add_languages('cpp', native: false, required: get_option('taglib')) # TODO: verify use of "native" flag
     executable('test-cp',
       'test-cp.cc',
       dependencies: [taglib, libgpod_dep])

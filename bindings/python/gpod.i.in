@@ -108,7 +108,7 @@ PyObject* sw_get_tracks(Itdb_iTunesDB *itdb) {
 
 PyObject* sw_get_track(GList *list, gint index) {
   GList *position;
-  if ( (index >= g_list_length(list)) || index < 0 ) {
+  if ( (index >= (int)g_list_length(list)) || index < 0 ) {
    PyErr_SetString(PyExc_IndexError, "Value out of range");
    return NULL;
   }
@@ -118,7 +118,7 @@ PyObject* sw_get_track(GList *list, gint index) {
 
 PyObject* sw_get_rule(GList *list, gint index) {
   GList *position;
-  if ( (index >= g_list_length(list)) || index < 0 ) {
+  if ( (index >= (int)g_list_length(list)) || index < 0 ) {
    PyErr_SetString(PyExc_IndexError, "Value out of range");
    return NULL;
   }
@@ -128,7 +128,7 @@ PyObject* sw_get_rule(GList *list, gint index) {
 
 PyObject* sw_get_playlist(GList *list, gint index) {
   GList *position;
-  if ( (index >= g_list_length(list)) || index < 0 ) {
+  if ( (index >= (int)g_list_length(list)) || index < 0 ) {
    PyErr_SetString(PyExc_IndexError, "Value out of range");
    return NULL;
   }
@@ -216,7 +216,7 @@ SWIGTYPE_p__Itdb_PhotoAlbum, 0));
 
 PyObject* sw_get_photoalbum(GList *list, gint index) {
   GList *position;
-  if ( (index >= g_list_length(list)) || index < 0 ) {
+  if ( (index >= (int)g_list_length(list)) || index < 0 ) {
    PyErr_SetString(PyExc_IndexError, "Value out of range");
    return NULL;
   }
@@ -250,7 +250,7 @@ SWIGTYPE_p__Itdb_Artwork, 0));
 
 PyObject* sw_get_photo(GList *list, gint index) {
   GList *position;
-  if ( (index >= g_list_length(list)) || index < 0 ) {
+  if ( (index >= (int)g_list_length(list)) || index < 0 ) {
    PyErr_SetString(PyExc_IndexError, "Value out of range");
    return NULL;
   }
