@@ -27,7 +27,8 @@
 #ifndef __ITDB_ENDIANNESS_H__
 #define __ITDB_ENDIANNESS_H__
 
-#include <glib.h>
+#include "shims.h"
+
 #include "itdb.h"
 #include "itdb_device.h"
 #include "itdb_private.h"

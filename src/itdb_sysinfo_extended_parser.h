@@ -28,7 +28,7 @@
 #ifndef __ITDB_SYSINFO_EXTENDED_PARSER_H__
 #define __ITDB_SYSINFO_EXTENDED_PARSER_H__
 
-#include <glib.h>
+#include "shims.h"
 
 G_BEGIN_DECLS
 

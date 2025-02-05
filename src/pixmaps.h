@@ -36,6 +36,8 @@
 #ifndef __PIXMAPS_H__
 #define __PIXMAPS_H__
 
+#include "shims.h"
+
 #include "itdb.h"
 
 #ifdef HAVE_GDKPIXBUF

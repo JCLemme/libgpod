@@ -28,8 +28,9 @@
 #ifndef __ITDB_ZLIB_H__
 #define __ITDB_ZLIB_H__
 
+#include "shims.h"
+
 G_BEGIN_DECLS
-#include <glib.h>
 #include <itdb_private.h>
 
 G_GNUC_INTERNAL gboolean itdb_zlib_check_decompress_fimp (FImport *fimp);

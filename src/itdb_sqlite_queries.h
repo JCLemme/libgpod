@@ -19,6 +19,8 @@
 #ifndef __LIBITDBPREP_H
 #define __LIBITDBPREP_H
 
+#include "shims.h"
+
 /** creation statement for 'Dynamic.itdb' */
 static const char Dynamic_create[] =
 	"BEGIN TRANSACTION;" \

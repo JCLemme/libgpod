@@ -29,7 +29,7 @@
 #ifndef __ITDB_PLIST_H__
 #define __ITDB_PLIST_H__
 
-#include <glib-object.h>
+#include "shims.h"
 
 G_BEGIN_DECLS
 

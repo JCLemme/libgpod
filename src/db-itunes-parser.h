@@ -27,7 +27,7 @@
 #ifndef DB_PARSER_H
 #define DB_PARSER_H
 
-#include <glib.h>
+#include "shims.h"
 
 struct _MHeader {
 	unsigned char header_id[4];

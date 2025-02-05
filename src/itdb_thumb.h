@@ -23,6 +23,8 @@
 #ifndef __ITDB_THUMB_H__
 #define __ITDB_THUMB_H__
 
+#include "shims.h"
+
 #include "itdb.h"
 #include "itdb_device.h"
 

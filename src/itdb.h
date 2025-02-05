@@ -41,7 +41,8 @@
 
 #include <sys/types.h>
 #include <time.h>
-#include <glib.h>
+
+#include "shims.h"
 
 G_BEGIN_DECLS
 

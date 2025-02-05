@@ -11,10 +11,11 @@
 #ifndef RIJNDAEL_H
 #define RIJNDAEL_H
 
+#include "shims.h"
+
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <glib.h>
 
 #define u8 uint8_t /* 8 bits  */
 #define u32 uint32_t       /* 32 bits */

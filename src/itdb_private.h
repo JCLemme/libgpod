@@ -29,6 +29,8 @@
 #ifndef __ITDB_PRIVATE_H__
 #define __ITDB_PRIVATE_H__
 
+#include "shims.h"
+
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif

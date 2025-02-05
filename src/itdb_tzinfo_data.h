@@ -26,6 +26,8 @@
 |  $Id$
 */
 
+#include "shims.h"
+
 #ifndef __ITDB_TZINFO_DATA_H__
 #define __ITDB_TZINFO_DATA_H__
 

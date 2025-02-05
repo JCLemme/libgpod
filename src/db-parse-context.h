@@ -28,6 +28,8 @@
 #ifndef DB_PARSE_CONTEXT
 #define DB_PARSE_CONTEXT
 
+#include "shims.h"
+
 #include <sys/types.h>
 #include "itdb.h"
 #include "itdb_private.h"

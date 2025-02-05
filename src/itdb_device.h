@@ -39,14 +39,14 @@
 #  include <config.h>
 #endif
 
+#include "shims.h"
+
 #include "itdb.h"
 #include "itdb_sysinfo_extended_parser.h"
 
-#include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef enum _ItdbThumbFormat ItdbThumbFormat;
 
 enum _ItdbThumbFormat
 {
@@ -74,7 +74,8 @@ enum _ItdbThumbFormat
     THUMB_FORMAT_EXPERIMENTAL_BE,
 };
 
-typedef enum _ItdbChecksumType ItdbChecksumType;
+typedef enum _ItdbThumbFormat ItdbThumbFormat;
+
 enum _ItdbChecksumType {
     ITDB_CHECKSUM_UNKNOWN	= -1,
     ITDB_CHECKSUM_NONE		= 0,
@@ -82,6 +83,8 @@ enum _ItdbChecksumType {
     ITDB_CHECKSUM_HASH72	= 2,
     ITDB_CHECKSUM_HASHAB	= 3
 };
+
+typedef enum _ItdbChecksumType ItdbChecksumType;
 
 /**
  * Itdb_Device:

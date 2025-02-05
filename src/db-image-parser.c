@@ -26,8 +26,7 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include <glib.h>
-#include <glib-object.h>
+#include "shims.h"
 
 #include "itdb_device.h"
 #include "itdb_endianness.h"
