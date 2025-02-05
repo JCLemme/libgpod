@@ -77,7 +77,7 @@ track_from_file (const char *filename)
 	if (g_stat (filename, &st) == 0) {
 		track->size = st.st_size;
 	}
-	track->tracklen = file.audioProperties()->length() * 1000;
+	track->tracklen = file.audioProperties()->lengthInMilliseconds();
 	track->track_nr = tag->track();
 	track->bitrate = file.audioProperties()->bitrate();
 	track->samplerate = file.audioProperties()->sampleRate();

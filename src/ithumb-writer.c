@@ -973,19 +973,20 @@ ithumb_writer_write_thumbnail (iThumbWriter *writer,
 
     if (pixbuf == NULL)
     {
-	/* This is quite bad... if we just return FALSE the ArtworkDB
-	   gets messed up. */
-	pixbuf = gdk_pixbuf_from_pixdata (&questionmark_pixdata, FALSE, NULL);
-
-	if (!pixbuf)
-	{
-	    /* Somethin went wrong. let's insert a red thumbnail */
-	    pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
-				     writer->img_info->width,
-				     writer->img_info->height);
-	    gdk_pixbuf_fill (pixbuf, 0xff000000);
-	}
-	/* avoid rotation */
+        /* This is quite bad... if we just return FALSE the ArtworkDB
+           gets messed up. */
+        //pixbuf = gdk_pixbuf_from_pixdata (&questionmark_pixdata, FALSE, NULL);
+        // Commented to avoid warning. 
+        // TODO: replace the question mark with a GResource
+        if (!pixbuf)
+        {
+            /* Somethin went wrong. let's insert a red thumbnail */
+            pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
+                         writer->img_info->width,
+                         writer->img_info->height);
+            gdk_pixbuf_fill (pixbuf, 0xff000000);
+        }
+        /* avoid rotation */
         itdb_thumb_set_rotation (thumb, 0);
     }
 

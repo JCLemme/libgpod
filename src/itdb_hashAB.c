@@ -42,15 +42,16 @@ static calcHashAB_t calc_hashAB = NULL;
 
 static gboolean load_libhashab()
 {
-	gchar *path;
+	//gchar *path;
 	GModule *handle;
 
 	if (!g_module_supported()) {
 		return FALSE;
 	}
-	path = g_module_build_path(LIBGPOD_BLOB_DIR, "hashab");
-	handle = g_module_open(path, G_MODULE_BIND_LAZY);
-	g_free(path);
+	//path = g_module_build_path(LIBGPOD_BLOB_DIR, "hashab");
+
+	handle = g_module_open(LIBGPOD_BLOB_DIR "hashab", G_MODULE_BIND_LAZY);
+	//g_free(path);
 	if (!handle) {
 		return FALSE;
 	}

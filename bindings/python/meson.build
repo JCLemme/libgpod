@@ -18,7 +18,7 @@ if swig.found() and py3_inst.found()
     gpod_swig = custom_target('gpod_c',
         input: gpod_i,
         output: ['gpod_wrap.c', 'gpod.py'],
-        command: [swig, '-python', '-py3', '-Wall', '-Wextra',
+        command: [swig, '-python', '-Wall', '-Wextra',
                   '-I@CURRENT_SOURCE_DIR@',
                   '-MMD', '-MF', '@DEPFILE@',
                   '@INPUT@'],

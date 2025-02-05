@@ -1,7 +1,7 @@
 project('gpod', 'c',
   version : '0.8.4',
   meson_version : '>=1.4.0',
-  default_options : ['warning_level=1', # was 3
+  default_options : ['warning_level=1', # was 3, but -Wpedantic fires a ton of warnings that we (probably) can ignore. 
                      'c_std=c11',
                      'buildtype=debugoptimized'])
 

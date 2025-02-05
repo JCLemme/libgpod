@@ -405,6 +405,10 @@ typedef enum {
  * the wrong limit and then make it into the "opposite", which would be frickin'
  * annoying.
  *
+ * Big flag values are cast to int to suppress a warning. I am under the impression
+ * that this is fine for any platform with 32-bit ints (i.e. all of them).
+ * You've been warned.
+ *
  * Since: 0.5.0
  */
 typedef enum {
@@ -414,13 +418,12 @@ typedef enum {
     ITDB_LIMITSORT_ARTIST = 0x05,
     ITDB_LIMITSORT_GENRE = 0x07,
     ITDB_LIMITSORT_MOST_RECENTLY_ADDED = 0x10,
-    ITDB_LIMITSORT_LEAST_RECENTLY_ADDED = 0x80000010, /* See note above */
-    ITDB_LIMITSORT_MOST_OFTEN_PLAYED = 0x14,
-    ITDB_LIMITSORT_LEAST_OFTEN_PLAYED = 0x80000014,   /* See note above */
+    ITDB_LIMITSORT_LEAST_RECENTLY_ADDED = (int)0x80000010, /* See note above */ ITDB_LIMITSORT_MOST_OFTEN_PLAYED = 0x14,
+    ITDB_LIMITSORT_LEAST_OFTEN_PLAYED = (int)0x80000014,   /* See note above */
     ITDB_LIMITSORT_MOST_RECENTLY_PLAYED = 0x15,
-    ITDB_LIMITSORT_LEAST_RECENTLY_PLAYED = 0x80000015,/* See note above */
+    ITDB_LIMITSORT_LEAST_RECENTLY_PLAYED = (int)0x80000015,/* See note above */
     ITDB_LIMITSORT_HIGHEST_RATING = 0x17,
-    ITDB_LIMITSORT_LOWEST_RATING = 0x80000017         /* See note above */
+    ITDB_LIMITSORT_LOWEST_RATING = (int)0x80000017         /* See note above */
 } ItdbLimitSort;
 
 /**

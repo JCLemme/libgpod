@@ -2278,8 +2278,9 @@ int itdb_sqlite_generate_itdbs(FExport *fexp)
 
     tzoffset = fexp->itdb->tzoffset;
 
-    tmpdir = g_build_path(g_get_tmp_dir(), tmpnam(NULL), NULL);
-    if (g_mkdir(tmpdir, 0755) != 0) {
+    //tmpdir = g_build_path(g_get_tmp_dir(), tmpnam(NULL), NULL);
+    tmpdir = g_dir_make_tmp("XXXXXX", NULL);
+    if (0) {  // (err) {  // (g_mkdir(tmpdir, 0755) != 0) { // TODO: glib error handling 
 	g_set_error (&fexp->error, G_FILE_ERROR, g_file_error_from_errno(errno),
 		     "Could not create temporary directory '%s': %s",
 		     tmpdir, strerror(errno));

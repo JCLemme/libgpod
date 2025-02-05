@@ -8124,11 +8124,12 @@ gchar *itdb_get_artworkdb_path (const gchar *mountpoint)
  */
 time_t itdb_time_get_mac_time (void)
 {
-    GTimeVal time;
+    //GTimeVal time;
+    //g_get_current_time (&time);
 
-    g_get_current_time (&time);
+    //return time.tv_sec;
 
-    return time.tv_sec;
+    return g_get_real_time() / G_USEC_PER_SEC;
 }
 
 /**
